@@ -9,6 +9,10 @@ public class Player : MonoBehaviour
     public float DirectionalInitialPosForce;
     private bool nukeThrown;
     float TimeSinceLaunch;
+    public int ShotCount;
+    PlayerPrefs playerPrefs;
+
+    
 
     AudioSource source;
 
@@ -31,13 +35,21 @@ public class Player : MonoBehaviour
             || transform.position.y <= -20 || transform.position.y >=20
             || TimeSinceLaunch >= 2f)
         {
+            PlayerPrefs.SetInt("ShotCount", ShotCount + 1);
             string currentLoadScene = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentLoadScene);
         }
 
+
+
         if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)
         {
             TimeSinceLaunch += Time.deltaTime;
+        }
+
+        if (ShotCount == 5)
+        {
+            SceneManager.LoadScene("_Scenes/MainMenu");
         }
 
     }
@@ -66,6 +78,7 @@ public class Player : MonoBehaviour
 
         source.clip = LaunchClip;
         source.Play();
+
     }
 
     private void OnMouseDrag()
