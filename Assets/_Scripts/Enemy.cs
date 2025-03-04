@@ -3,90 +3,91 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+////public class Enemy : MonoBehaviour
+////{
+////    private Animator animator;
+////    private bool isDead = false; // Prevent multiple triggers
+
+////    private void Start()
+////    {
+////        animator = GetComponent<Animator>();
+////    }
+
+////    private void OnCollisionEnter2D(Collision2D collision)
+////    {
+////        Player player = collision.collider.GetComponent<Player>();
+
+////        if (!isDead && player != null)
+////        {
+////            Destroy(player.gameObject); // Destroy the player
+////            StartCoroutine(Die());
+////        }
+////    }
+
+////    private IEnumerator Die()
+////    {
+////        isDead = true; // Prevents multiple triggers
+////        animator.SetTrigger("Death"); // Trigger death animation
+
+////        Wait for the animation to finish
+
+////       yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
+////        Destroy(gameObject); // Destroy after animation
+////    }
+////}
+
+
+
 public class Enemy : MonoBehaviour
 {
-    private Animator animator;
-    private bool isDead = false; // Prevent multiple triggers
 
-    private void Start()
+    AudioSource source;
+    public AudioClip DeathClip;
+
+    public GameObject EnemyParticles;
+
+
+    private void Awake()
     {
-        animator = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Player player = collision.collider.GetComponent<Player>();
+        //bool hasCollidedWithPlayer = collision.collider.GetComponent<Player>() != null;
 
-        if (!isDead && player != null)
+        if (collision.collider.GetComponent<Player>())
         {
-            //Destroy(player.gameObject); // Destroy the player
-            StartCoroutine(Die());
+
+            enemyDie();
         }
+
+        if (collision.collider.CompareTag("Obstacle"))
+        {
+            enemyDie();
+        }
+
+        if (collision.collider.GetComponent<Enemy>() != null)
+        {
+            return;
+        }
+
     }
 
-    private IEnumerator Die()
+    void enemyDie()
     {
-        isDead = true; // Prevents multiple triggers
-        animator.SetTrigger("Death"); // Trigger death animation
+        if (source && DeathClip)
+        {
+            source.PlayOneShot(DeathClip); // Plays the clip without changing source.clip
+        }
 
-        // Wait for the animation to finish
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        Instantiate(EnemyParticles, transform.position, Quaternion.identity);
+        GetComponent<SpriteRenderer>().enabled = false; // Hide the enemy
 
-        Destroy(gameObject); // Destroy after animation
+        Destroy(gameObject, DeathClip.length); // Destroy after sound finishes
     }
 }
-
-
-
-//public class Enemy : MonoBehaviour
-//{
-
-//    AudioSource source;
-//    public AudioClip DeathClip;
-
-//    public GameObject EnemyParticles;
-
-
-//    private void Awake()
-//    {
-//        source = GetComponent<AudioSource>();
-//    }
-
-//    private void OnCollisionEnter2D(Collision2D collision)
-//    {
-//        //bool hasCollidedWithPlayer = collision.collider.GetComponent<Player>() != null;
-
-//        if (collision.collider.GetComponent<Player>())
-//        {
-
-//            enemyDie();
-//        }
-
-//        if (collision.collider.CompareTag("Obstacle"))
-//        {
-//            enemyDie();
-//        }
-
-//        if (collision.collider.GetComponent<Enemy>() != null)
-//        {
-//            return;
-//        }
-
-//    }
-
-//    void enemyDie()
-//    {
-//        if (source && DeathClip)
-//        {
-//            source.PlayOneShot(DeathClip); // Plays the clip without changing source.clip
-//        }
-
-//        Instantiate(EnemyParticles, transform.position, Quaternion.identity);
-//        GetComponent<SpriteRenderer>().enabled = false; // Hide the enemy
-
-//        Destroy(gameObject, DeathClip.length); // Destroy after sound finishes
-//    }
-//}
 
 
 

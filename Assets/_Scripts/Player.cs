@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -9,20 +11,25 @@ public class Player : MonoBehaviour
     public float DirectionalInitialPosForce;
     private bool nukeThrown;
     float TimeSinceLaunch;
-    public int ShotCount;
-    PlayerPrefs playerPrefs;
+    private int ShotCount;
 
-    
+    public TextMeshProUGUI shotCountText; // UI Text reference
+
+    public int maxShots = 3; // Max shots before Game Over
+
 
     AudioSource source;
 
     public AudioClip TensionClip;
     public AudioClip LaunchClip;
-    
+
     private void Awake()
     {
         startingPos = transform.position;
         source = GetComponent<AudioSource>();
+
+        ShotCount = PlayerPrefs.GetInt("ShotCount", 0);
+        UpdateShotCountUI(); // Update UI at start
     }
 
     private void Update()
@@ -35,11 +42,22 @@ public class Player : MonoBehaviour
             || transform.position.y <= -20 || transform.position.y >=20
             || TimeSinceLaunch >= 2f)
         {
-            PlayerPrefs.SetInt("ShotCount", ShotCount + 1);
+            ShotCount++;
+            PlayerPrefs.SetInt("ShotCount", ShotCount);
+            PlayerPrefs.Save();
+
+            UpdateShotCountUI(); // Update UI at start
+
             string currentLoadScene = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentLoadScene);
         }
 
+        if (ShotCount >= maxShots)
+        {
+            PlayerPrefs.SetInt("ShotCount", 0); // Reset the counter
+            PlayerPrefs.Save();
+            SceneManager.LoadScene("_Scenes/GameOver");
+        }
 
 
         if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)
@@ -47,10 +65,6 @@ public class Player : MonoBehaviour
             TimeSinceLaunch += Time.deltaTime;
         }
 
-        if (ShotCount == 5)
-        {
-            SceneManager.LoadScene("_Scenes/MainMenu");
-        }
 
     }
 
@@ -85,6 +99,16 @@ public class Player : MonoBehaviour
     {
         Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position = new Vector3(newPosition.x, newPosition.y, 0);
+    }
+
+    // Function to update UI text
+    private void UpdateShotCountUI()
+    {
+        if (shotCountText != null)
+        {
+            int shotsLeft = maxShots - ShotCount;
+            shotCountText.text = "Shots Left: " + shotsLeft;
+        }
     }
 }
 
