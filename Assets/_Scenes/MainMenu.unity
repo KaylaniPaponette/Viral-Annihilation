@@ -487,6 +487,8 @@ MonoBehaviour:
   - sceneName: _Scenes/Level2
     nextLevelName: _Scenes/Level3
   - sceneName: _Scenes/Level3
+    nextLevelName: _Scenes/Level4
+  - sceneName: _Scenes/Level4
     nextLevelName: _Scenes/Win
   enemyTag: Enemy
   debugMode: 1
