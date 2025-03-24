@@ -1,0 +1,949 @@
+fileFormatVersion: 2
+guid: ca93db03ff77a264b8e14d9c33b994a9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1161739657808922868
+    second: DeadVirusesBG_0
+  - first:
+      213: 935055966758653613
+    second: DeadVirusesBG_1
+  - first:
+      213: 1212396843845539029
+    second: DeadVirusesBG_2
+  - first:
+      213: 8343145994134339964
+    second: DeadVirusesBG_3
+  - first:
+      213: 464196026282099842
+    second: DeadVirusesBG_4
+  - first:
+      213: 1509302561258221321
+    second: DeadVirusesBG_5
+  - first:
+      213: -7136442263595923686
+    second: DeadVirusesBG_6
+  - first:
+      213: 2299775898102928604
+    second: DeadVirusesBG_7
+  - first:
+      213: -2322467049237149447
+    second: DeadVirusesBG_8
+  - first:
+      213: 6710900516193051084
+    second: DeadVirusesBG_9
+  - first:
+      213: -6539199326486451085
+    second: DeadVirusesBG_10
+  - first:
+      213: 7205822282660927530
+    second: DeadVirusesBG_11
+  - first:
+      213: -6523278174572598650
+    second: DeadVirusesBG_12
+  - first:
+      213: 3055407133614898818
+    second: DeadVirusesBG_13
+  - first:
+      213: 8506055716799409949
+    second: DeadVirusesBG_14
+  - first:
+      213: 5323703608977641362
+    second: DeadVirusesBG_15
+  - first:
+      213: 6042393328821871344
+    second: DeadVirusesBG_16
+  - first:
+      213: -8936942673381621137
+    second: DeadVirusesBG_17
+  - first:
+      213: 7034781184802419407
+    second: DeadVirusesBG_18
+  - first:
+      213: -1376454839834574682
+    second: DeadVirusesBG_19
+  - first:
+      213: -6247853540422724876
+    second: DeadVirusesBG_20
+  - first:
+      213: 1155754183769638966
+    second: DeadVirusesBG_21
+  - first:
+      213: 7658052012117642300
+    second: DeadVirusesBG_22
+  - first:
+      213: 8611420799802347151
+    second: DeadVirusesBG_23
+  - first:
+      213: -7875191004132783148
+    second: DeadVirusesBG_24
+  - first:
+      213: -9130658060381170991
+    second: DeadVirusesBG_25
+  - first:
+      213: -8833032504405709696
+    second: DeadVirusesBG_26
+  - first:
+      213: -4627329853816430010
+    second: DeadVirusesBG_27
+  - first:
+      213: -4892076886473495163
+    second: DeadVirusesBG_28
+  - first:
+      213: 3949132490484131566
+    second: DeadVirusesBG_29
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 10000
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DeadVirusesBG_0
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 207
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f84f2940145f1010800000000000000
+      internalID: 1161739657808922868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_1
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 210
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dae42c7927cf9fc00800000000000000
+      internalID: 935055966758653613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_2
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 210
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d4d734818c43d010800000000000000
+      internalID: 1212396843845539029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_3
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 192
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c71c999e31fc8c370800000000000000
+      internalID: 8343145994134339964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_4
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 160
+        width: 46
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28441b493d7217600800000000000000
+      internalID: 464196026282099842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_5
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 196
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90f226eceae12f410800000000000000
+      internalID: 1509302561258221321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_6
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 196
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a17c74e529346fc90800000000000000
+      internalID: -7136442263595923686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_7
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 181
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd41e6d9ef17aef10800000000000000
+      internalID: 2299775898102928604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_8
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 113
+        width: 78
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f88baf0680f4cfd0800000000000000
+      internalID: -2322467049237149447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_9
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 185
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc12caea678e12d50800000000000000
+      internalID: 6710900516193051084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_10
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 163
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37c2d45dbd81045a0800000000000000
+      internalID: -6539199326486451085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_11
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 163
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2859902039300460800000000000000
+      internalID: 7205822282660927530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_12
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 148
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68aaa81ef09a875a0800000000000000
+      internalID: -6523278174572598650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_13
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 148
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28e7f4b899cf66a20800000000000000
+      internalID: 3055407133614898818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_14
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 137
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1f628f7b949b0670800000000000000
+      internalID: 8506055716799409949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_15
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 62
+        width: 91
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29fc396e93891e940800000000000000
+      internalID: 5323703608977641362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_16
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 130
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f22e95f7b4ead350800000000000000
+      internalID: 6042393328821871344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_17
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f620f0f0df999f380800000000000000
+      internalID: -8936942673381621137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_18
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 119
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc2ffb8373090a160800000000000000
+      internalID: 7034781184802419407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_19
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 112
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a00b4ead99d5ece0800000000000000
+      internalID: -1376454839834574682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_20
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 56
+        width: 56
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f2df6abe4a2b49a0800000000000000
+      internalID: -6247853540422724876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_21
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 105
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 638c2438e401a0010800000000000000
+      internalID: 1155754183769638966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_22
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 108
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3cccbd1bbdd64a60800000000000000
+      internalID: 7658052012117642300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_23
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 86
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8e01a79799e18770800000000000000
+      internalID: 8611420799802347151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_24
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 68
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4db405c9183b5b290800000000000000
+      internalID: -7875191004132783148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_25
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 61
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d25c61ded2694180800000000000000
+      internalID: -9130658060381170991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_26
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 68
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08c2b659cb3ca6580800000000000000
+      internalID: -8833032504405709696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_27
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 53
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64226bcb30c68cfb0800000000000000
+      internalID: -4627329853816430010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_28
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 50
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58d29d7bdf9db1cb0800000000000000
+      internalID: -4892076886473495163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DeadVirusesBG_29
+      rect:
+        serializedVersion: 2
+        x: 181
+        y: 43
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee6a242a3132ec630800000000000000
+      internalID: 3949132490484131566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      DeadVirusesBG_0: 1161739657808922868
+      DeadVirusesBG_1: 935055966758653613
+      DeadVirusesBG_10: -6539199326486451085
+      DeadVirusesBG_11: 7205822282660927530
+      DeadVirusesBG_12: -6523278174572598650
+      DeadVirusesBG_13: 3055407133614898818
+      DeadVirusesBG_14: 8506055716799409949
+      DeadVirusesBG_15: 5323703608977641362
+      DeadVirusesBG_16: 6042393328821871344
+      DeadVirusesBG_17: -8936942673381621137
+      DeadVirusesBG_18: 7034781184802419407
+      DeadVirusesBG_19: -1376454839834574682
+      DeadVirusesBG_2: 1212396843845539029
+      DeadVirusesBG_20: -6247853540422724876
+      DeadVirusesBG_21: 1155754183769638966
+      DeadVirusesBG_22: 7658052012117642300
+      DeadVirusesBG_23: 8611420799802347151
+      DeadVirusesBG_24: -7875191004132783148
+      DeadVirusesBG_25: -9130658060381170991
+      DeadVirusesBG_26: -8833032504405709696
+      DeadVirusesBG_27: -4627329853816430010
+      DeadVirusesBG_28: -4892076886473495163
+      DeadVirusesBG_29: 3949132490484131566
+      DeadVirusesBG_3: 8343145994134339964
+      DeadVirusesBG_4: 464196026282099842
+      DeadVirusesBG_5: 1509302561258221321
+      DeadVirusesBG_6: -7136442263595923686
+      DeadVirusesBG_7: 2299775898102928604
+      DeadVirusesBG_8: -2322467049237149447
+      DeadVirusesBG_9: 6710900516193051084
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

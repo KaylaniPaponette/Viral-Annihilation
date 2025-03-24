@@ -307,7 +307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -10.4714, y: -122.63124}
+  m_AnchoredPosition: {x: -10.4714, y: -117}
   m_SizeDelta: {x: 2406.2622, y: 452.3346}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1471013526
@@ -330,14 +330,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The world is facing an extinction level pandemic. Super viruses are starting
-    to take over.
-
-    A new weapon has been created, an Anti-Viral-Proximity-Nuke
-    (AVPN)  capable of destroying these viral invaders by simple contact.
-
-    Slingshot
-    your AVPN and elminate the viruses, rid the world of this plague'
+  m_text: "The world is facing an extinction level pandemic. Super viruses are starting
+    to take over.\nScientists have created a new weapron, the Anti-Viral-Proximity-Nuke
+    (AVPN)  capable of destroying these viral invaders by simple contact.\nYou are
+    the VIRAL SLAYER \nYOUR MISSION:  Slingshot your AVPN and elminate the viruses,
+    rid the world of this plague!!\nWARNING: AVPNs are in short supply... If you
+    can't clear an area in 3 shots we'll have to hire another VIRAL SLAYER"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
@@ -364,8 +362,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 66.72
-  m_fontSizeBase: 66.72
+  m_fontSize: 63.59
+  m_fontSizeBase: 63.59
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -402,7 +400,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -23.406738, y: -117.03235, z: 35.110107, w: -216.51007}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -451,7 +449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -432}
+  m_AnchoredPosition: {x: 0, y: -496}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1640669455

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ab3d4884faa20eb48a093711e9e43d4e
+guid: de8009c70c2df52489fd22331b67a969
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7040075123685949166
-    second: level2-bg_0
+      213: 1161739657808922868
+    second: DeadVirusesBG_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 40
+  spritePixelsToUnits: 1000
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -152,13 +152,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: level2-bg_0
+      name: DeadVirusesBG_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 771
-        height: 519
+        width: 260
+        height: 260
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,8 +167,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eee7d5b660f53b160800000000000000
-      internalID: 7040075123685949166
+      spriteID: 4f84f2940145f1010800000000000000
+      internalID: 1161739657808922868
       vertices: []
       indices: 
       edges: []
@@ -187,7 +187,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      level2-bg_0: 7040075123685949166
+      DeadVirusesBG_0: 1161739657808922868
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

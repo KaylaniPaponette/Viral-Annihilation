@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 8373634452085952392}
   - component: {fileID: 8289367487626936038}
   - component: {fileID: 9062833034439836831}
-  - component: {fileID: 161957073949816438}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -135,7 +134,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DirectionalInitialPosForce: 300
   shotCountText: {fileID: 0}
-  maxShots: 10
   TensionClip: {fileID: 8300000, guid: d8bd226a26e6f8a44ad133f7b84a08d9, type: 3}
   LaunchClip: {fileID: 8300000, guid: f6ff8aab54a9cc44b95101c66733f208, type: 3}
 --- !u!120 &2020860073386549729
@@ -459,15 +457,3 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &161957073949816438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2287389630231324198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18d1cfe35ff701044a0dc357d5ec7bdc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
