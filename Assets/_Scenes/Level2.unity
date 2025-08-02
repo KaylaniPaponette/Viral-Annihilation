@@ -1069,6 +1069,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pinky (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5278676175442194051, guid: 4e78adc7597bac846ab4753f79878dcf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9154627369073021826, guid: 4e78adc7597bac846ab4753f79878dcf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.864073
