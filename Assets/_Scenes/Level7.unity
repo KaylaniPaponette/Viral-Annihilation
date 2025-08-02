@@ -2176,8 +2176,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DirectionalInitialPosForce: 300
   shotCountText: {fileID: 2120339336}
-  TensionClip: {fileID: 8300000, guid: d8bd226a26e6f8a44ad133f7b84a08d9, type: 3}
-  LaunchClip: {fileID: 8300000, guid: f6ff8aab54a9cc44b95101c66733f208, type: 3}
+  tensionSfxIndex: 0
+  launchSfxIndex: 1
 --- !u!50 &1762926103
 Rigidbody2D:
   serializedVersion: 5

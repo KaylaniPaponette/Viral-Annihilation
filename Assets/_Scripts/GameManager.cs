@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour
     // Shot tracking
     [SerializeField] private int shotCount = 0;
     public int maxShots = 3;
-    
+
+    [Header("Music Settings")] // Optional: Add a header for organization
+    public int defaultBgmIndex = 0; // <<< ADD THIS LINE
+
     // Game state
     private bool isTransitioningToGameOver = false;
     private bool isTransitioningToNextLevel = false;
@@ -21,6 +24,7 @@ public class GameManager : MonoBehaviour
     {
         public string sceneName;
         public string nextLevelName;
+        public int bgmIndex;
     }
     
     public List<LevelData> levelSequence = new List<LevelData>();
@@ -93,7 +97,27 @@ public class GameManager : MonoBehaviour
         string scenePath = scene.path;
         string sceneName = scene.name;
         Debug.Log($"Full scene path: {scenePath}, Scene name: {sceneName}");
-        
+
+        // --- START OF NEW CODE ---
+
+        // Find the level data for the current scene
+        LevelData currentLevelData = GetLevelData(currentLevel);
+
+        // If we found data for this level and the SoundManager exists...
+        if (currentLevelData != null && SoundManager.Instance != null)
+        {
+            // ...tell the SoundManager to play the BGM for this level.
+            SoundManager.Instance.PlayBGM(currentLevelData.bgmIndex);
+        }
+        else if (SoundManager.Instance != null)
+        {
+            // Optional: If this scene is not in our level list (like a main menu), stop the music.
+            // You could also play a default track here, e.g., SoundManager.Instance.PlayBGM(0);
+            SoundManager.Instance.PlayBGM(defaultBgmIndex);
+        }
+
+        // --- END OF NEW CODE ---
+
         // If this is the GameOver scene, reset game state
         if (sceneName == "GameOver" || scenePath.Contains("/GameOver"))
         {
@@ -126,7 +150,21 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    
+
+    // --- ADD THIS NEW HELPER FUNCTION ---
+    // This function finds the LevelData that matches the given scene name.
+    LevelData GetLevelData(string sceneName)
+    {
+        foreach (LevelData level in levelSequence)
+        {
+            if (level.sceneName == sceneName || level.sceneName.EndsWith("/" + sceneName))
+            {
+                return level;
+            }
+        }
+        return null; // Return null if no match is found
+    }
+
     void InitialEnemyCheck()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);

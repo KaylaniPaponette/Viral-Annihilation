@@ -1888,8 +1888,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DirectionalInitialPosForce: 300
   shotCountText: {fileID: 1210815942}
-  TensionClip: {fileID: 8300000, guid: d8bd226a26e6f8a44ad133f7b84a08d9, type: 3}
-  LaunchClip: {fileID: 8300000, guid: f6ff8aab54a9cc44b95101c66733f208, type: 3}
+  tensionSfxIndex: 0
+  launchSfxIndex: 0
 --- !u!120 &1417050055
 LineRenderer:
   serializedVersion: 2
@@ -2979,6 +2979,10 @@ PrefabInstance:
       propertyPath: shotCountText
       value: 
       objectReference: {fileID: 1210815942}
+    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
+      propertyPath: launchSfxIndex
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 161957073949816438, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
     m_RemovedGameObjects: []

@@ -11,9 +11,15 @@ public class Player : MonoBehaviour
     private bool nukeThrown;
     float TimeSinceLaunch;
     public TextMeshProUGUI shotCountText; // UI Text reference
-    AudioSource source;
-    public AudioClip TensionClip;
-    public AudioClip LaunchClip;
+    //AudioSource source;
+    //public AudioClip TensionClip;
+    //public AudioClip LaunchClip;
+
+        // --- NEW SFX VARIABLES ---
+    [Header("Sound Effect Indexes")]
+    public int tensionSfxIndex;
+    public int launchSfxIndex;
+
 
     // Flag to prevent multiple resets
     private bool isResetting = false;
@@ -22,7 +28,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         startingPos = transform.position;
-        source = GetComponent<AudioSource>();
+        //source = GetComponent<AudioSource>();
         UpdateShotCountUI();
 
         // Subscribe to events with try/catch
@@ -101,8 +107,14 @@ public class Player : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
-        source.clip = TensionClip;
-        source.Play();
+        //source.clip = TensionClip;
+        //source.Play();
+        // --- UPDATED CODE ---
+        // Play the tension sound via the SoundManager
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(tensionSfxIndex);
+        }
     }
 
     private void OnMouseUp()
@@ -113,8 +125,14 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
         GetComponent<Rigidbody2D>().gravityScale = 1;
         GetComponent<LineRenderer>().enabled = false;
-        source.clip = LaunchClip;
-        source.Play();
+        //source.clip = LaunchClip;
+        //source.Play();
+        // --- UPDATED CODE ---
+        // Play the launch sound via the SoundManager
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(launchSfxIndex);
+        }
     }
 
     private void OnMouseDrag()

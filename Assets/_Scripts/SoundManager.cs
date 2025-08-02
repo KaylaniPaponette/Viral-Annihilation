@@ -10,13 +10,13 @@ public class SoundManager : MonoBehaviour
 
     [Header("Audio Sources")]           //Add an Audio Source Component to SoundManager in Hierarchy and set it's Output to BGM/SFX/Voice then drag that component to these in inspector
     public AudioSource bgmSource;
-    //public AudioSource sfxSource;
+    public AudioSource sfxSource;
 
     [Header("BGM Audio Clips")]             //click + and drag the clip into the index 
     public AudioClip[] backgroundMusic;
 
-    //[Header("SFX Audio Clips")]
-    //public AudioClip[] sfxSound;
+    [Header("SFX Audio Clips")]
+    public AudioClip[] sfxSound;
 
 
 
@@ -51,14 +51,13 @@ public class SoundManager : MonoBehaviour
         bgmSource.Stop();
     }
 
-    //public void PlaySFX(int index)
-    //{
-    //    if (index >= 0 && index < sfxSound.Length)
-    //    {
-    //        sfxSource.clip = sfxSound[index];
-    //        sfxSource.Play();
-    //    }
-    //}
+    public void PlaySFX(int index)
+    {
+        if (index >= 0 && index < sfxSound.Length)
+        {
+            sfxSource.PlayOneShot(sfxSound[index]);
+        }
+    }
 
 
     public void SetVolume(string parameter, float value)
