@@ -105,6 +105,9 @@ public class Player : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // If a nuke has already been thrown, do nothing
+        if (nukeThrown) return;
+        // Change color and enable line renderer
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
         //source.clip = TensionClip;
@@ -119,6 +122,9 @@ public class Player : MonoBehaviour
 
     private void OnMouseUp()
     {
+        // If a nuke has already been thrown, do nothing
+        if (nukeThrown) return;
+
         nukeThrown = true;
         GetComponent<SpriteRenderer>().color = Color.white;
         directiontoInitialPos = startingPos - transform.position;
@@ -137,6 +143,10 @@ public class Player : MonoBehaviour
 
     private void OnMouseDrag()
     {
+        // If a nuke has already been thrown, do nothing
+        if (nukeThrown) return;
+
+        // Update position based on mouse drag
         Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position = new Vector3(newPosition.x, newPosition.y, 0);
     }

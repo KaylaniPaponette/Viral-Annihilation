@@ -1,0 +1,12 @@
+# ninja log v5
+85	337	7759453170070197	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	609d0e472e9af3d1
+341	735	7759453174073604	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3ih3o2n4/obj/x86_64/libswappywrapper.so	5751ae39df760349
+39	1275	7759453179739843	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	8a7783126dbd398d
+18	1279	7759453179790199	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	430f802e544635ac
+50	1293	7759453179955999	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	b67f4fe4acc29e59
+73	1411	7759453181078752	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	8b54aa7f819d9548
+61	1437	7759453181403080	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	1e1e06d6e73b6585
+10	1507	7759453181946107	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	6126a7d05bed070d
+29	1715	7759453184185541	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	d3ff28fc2bc589d6
+1	1928	7759453186373599	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	9706cf04dd9129c3
+1929	2106	7759453188223538	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/3ih3o2n4/obj/x86_64/libgame.so	e7d3cfeb05ec51e1
