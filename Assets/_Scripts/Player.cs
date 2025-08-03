@@ -5,11 +5,19 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    private Collider2D _collider;
+
     Vector3 startingPos;
     private Vector2 directiontoInitialPos;
     public float DirectionalInitialPosForce;
+
     private bool nukeThrown;
+
+    [Tooltip("Time in seconds before the scene resets after the nuke stops moving.")]
+    public float resetTimeAfterStop = 2f; 
+    // This is used to determine when to reset the player
     float TimeSinceLaunch;
+
     public TextMeshProUGUI shotCountText; // UI Text reference
     //AudioSource source;
     //public AudioClip TensionClip;
@@ -27,6 +35,8 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        _collider = GetComponent<Collider2D>();
+
         startingPos = transform.position;
         //source = GetComponent<AudioSource>();
         UpdateShotCountUI();
@@ -77,9 +87,14 @@ public class Player : MonoBehaviour
         GetComponent<LineRenderer>().SetPosition(0, transform.position);
 
         // Check if the projectile is out of bounds or has stopped moving
-        if (transform.position.x <= -30 || transform.position.x >= 20
-            || transform.position.y <= -20 || transform.position.y >= 20
-            || TimeSinceLaunch >= 2f)
+        // Note: The original condition was commented out, so we are using the new one
+        //if (transform.position.x <= -30 || transform.position.x >= 20
+        //    || transform.position.y <= -20 || transform.position.y >= 20
+        //    || TimeSinceLaunch >= 2f)
+        if (nukeThrown && (transform.position.x <= -30 || transform.position.x >= 20
+                        || transform.position.y <= -20 || transform.position.y >= 20
+                        || TimeSinceLaunch >= resetTimeAfterStop))
+
         {
             // Mark that we're resetting to prevent multiple calls
             isResetting = true;
@@ -107,11 +122,16 @@ public class Player : MonoBehaviour
     {
         // If a nuke has already been thrown, do nothing
         if (nukeThrown) return;
+
+        // Ensure the collider is set to trigger to prevent physics interactions while dragging
+        if (_collider != null) _collider.isTrigger = true;
+
         // Change color and enable line renderer
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
         //source.clip = TensionClip;
         //source.Play();
+
         // --- UPDATED CODE ---
         // Play the tension sound via the SoundManager
         if (SoundManager.Instance != null)
@@ -125,6 +145,9 @@ public class Player : MonoBehaviour
         // If a nuke has already been thrown, do nothing
         if (nukeThrown) return;
 
+        // Reset the collider to not be a trigger
+        if (_collider != null) _collider.isTrigger = false;
+
         nukeThrown = true;
         GetComponent<SpriteRenderer>().color = Color.white;
         directiontoInitialPos = startingPos - transform.position;
@@ -133,6 +156,7 @@ public class Player : MonoBehaviour
         GetComponent<LineRenderer>().enabled = false;
         //source.clip = LaunchClip;
         //source.Play();
+
         // --- UPDATED CODE ---
         // Play the launch sound via the SoundManager
         if (SoundManager.Instance != null)

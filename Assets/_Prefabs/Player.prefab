@@ -133,9 +133,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DirectionalInitialPosForce: 300
+  resetTimeAfterStop: 0.8
   shotCountText: {fileID: 0}
-  TensionClip: {fileID: 8300000, guid: d8bd226a26e6f8a44ad133f7b84a08d9, type: 3}
-  LaunchClip: {fileID: 8300000, guid: f6ff8aab54a9cc44b95101c66733f208, type: 3}
+  tensionSfxIndex: 0
+  launchSfxIndex: 0
 --- !u!120 &2020860073386549729
 LineRenderer:
   serializedVersion: 2
