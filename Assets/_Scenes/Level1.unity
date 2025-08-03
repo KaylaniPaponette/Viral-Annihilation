@@ -2981,6 +2981,10 @@ PrefabInstance:
       propertyPath: launchSfxIndex
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
+      propertyPath: TimeSinceLaunch
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 161957073949816438, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
     m_RemovedGameObjects: []
