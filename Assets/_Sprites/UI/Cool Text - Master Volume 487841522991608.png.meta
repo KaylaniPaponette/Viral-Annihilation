@@ -1,0 +1,481 @@
+fileFormatVersion: 2
+guid: 2ff7d4cfa306a8343ac936f540edf39b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8835911842430881615
+    second: Cool Text - Master Volume 487841522991608_0
+  - first:
+      213: 7265982867985955018
+    second: Cool Text - Master Volume 487841522991608_1
+  - first:
+      213: -8881496232748126693
+    second: Cool Text - Master Volume 487841522991608_2
+  - first:
+      213: 5333675212882323837
+    second: Cool Text - Master Volume 487841522991608_3
+  - first:
+      213: 4203719789657527494
+    second: Cool Text - Master Volume 487841522991608_4
+  - first:
+      213: -4706504507623180208
+    second: Cool Text - Master Volume 487841522991608_5
+  - first:
+      213: -5519920293513176314
+    second: Cool Text - Master Volume 487841522991608_6
+  - first:
+      213: 2220050924218007378
+    second: Cool Text - Master Volume 487841522991608_7
+  - first:
+      213: -7720460045740712405
+    second: Cool Text - Master Volume 487841522991608_8
+  - first:
+      213: -7406545892980472856
+    second: Cool Text - Master Volume 487841522991608_9
+  - first:
+      213: -5678684107704255631
+    second: Cool Text - Master Volume 487841522991608_10
+  - first:
+      213: -8521966983819328839
+    second: Cool Text - Master Volume 487841522991608_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 5
+        width: 81
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b07d357ef8806580800000000000000
+      internalID: -8835911842430881615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_1
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 5
+        width: 66
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac8706eebe4f5d460800000000000000
+      internalID: 7265982867985955018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_2
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 5
+        width: 66
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1ee3158b369eb480800000000000000
+      internalID: -8881496232748126693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_3
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 5
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d79282bd855050a40800000000000000
+      internalID: 5333675212882323837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_4
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 5
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c411dd50ec965a30800000000000000
+      internalID: 4203719789657527494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_5
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 5
+        width: 66
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 058785126132faeb0800000000000000
+      internalID: -4706504507623180208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_6
+      rect:
+        serializedVersion: 2
+        x: 491
+        y: 5
+        width: 81
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60b5da42dbd4563b0800000000000000
+      internalID: -5519920293513176314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_7
+      rect:
+        serializedVersion: 2
+        x: 572
+        y: 5
+        width: 66
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25fba41ad843fce10800000000000000
+      internalID: 2220050924218007378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_8
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 5
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2e570f3e7a6bd490800000000000000
+      internalID: -7720460045740712405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_9
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 5
+        width: 66
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e3454c70c9a63990800000000000000
+      internalID: -7406545892980472856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_10
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 5
+        width: 66
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17bb1a814e24131b0800000000000000
+      internalID: -5678684107704255631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Text - Master Volume 487841522991608_11
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 5
+        width: 67
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b287d5fd24ebb980800000000000000
+      internalID: -8521966983819328839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cool Text - Master Volume 487841522991608_0: -8835911842430881615
+      Cool Text - Master Volume 487841522991608_1: 7265982867985955018
+      Cool Text - Master Volume 487841522991608_10: -5678684107704255631
+      Cool Text - Master Volume 487841522991608_11: -8521966983819328839
+      Cool Text - Master Volume 487841522991608_2: -8881496232748126693
+      Cool Text - Master Volume 487841522991608_3: 5333675212882323837
+      Cool Text - Master Volume 487841522991608_4: 4203719789657527494
+      Cool Text - Master Volume 487841522991608_5: -4706504507623180208
+      Cool Text - Master Volume 487841522991608_6: -5519920293513176314
+      Cool Text - Master Volume 487841522991608_7: 2220050924218007378
+      Cool Text - Master Volume 487841522991608_8: -7720460045740712405
+      Cool Text - Master Volume 487841522991608_9: -7406545892980472856
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

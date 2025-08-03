@@ -433,7 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!58 &538377886
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -742,7 +742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!95 &605717067
 Animator:
   serializedVersion: 7
@@ -1058,7 +1058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!58 &822763851
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2776,7 +2776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!58 &1813445290
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3261,7 +3261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!95 &2072966137
 Animator:
   serializedVersion: 7

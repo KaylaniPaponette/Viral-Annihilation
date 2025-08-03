@@ -530,7 +530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!114 &322104006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1065,6 +1065,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4234227320143770568, guid: 4e78adc7597bac846ab4753f79878dcf, type: 3}
+      propertyPath: deathSfxIndex
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5278676175442194051, guid: 4e78adc7597bac846ab4753f79878dcf, type: 3}
       propertyPath: m_Name
       value: Pinky (1)
@@ -1244,7 +1248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!58 &1099135713
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2879,6 +2883,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bluey (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8425556168373773131, guid: 56833da37f8993e4cb94e82056934716, type: 3}
+      propertyPath: deathSfxIndex
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3194,6 +3202,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1283818904886992255, guid: 9fe4c6ed1c07fc34f936c8403478c1a0, type: 3}
+      propertyPath: deathSfxIndex
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5654181891300853945, guid: 9fe4c6ed1c07fc34f936c8403478c1a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.787592
@@ -3405,7 +3417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
+  deathSfxIndex: 3
 --- !u!114 &2057700770
 MonoBehaviour:
   m_ObjectHideFlags: 0

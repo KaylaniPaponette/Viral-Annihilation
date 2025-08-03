@@ -2787,6 +2787,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4234227320143770568, guid: 4e78adc7597bac846ab4753f79878dcf, type: 3}
+      propertyPath: deathSfxIndex
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5278676175442194051, guid: 4e78adc7597bac846ab4753f79878dcf, type: 3}
       propertyPath: m_Name
       value: Pinky
@@ -2896,6 +2900,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8425556168373773131, guid: 56833da37f8993e4cb94e82056934716, type: 3}
+      propertyPath: deathSfxIndex
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2987,6 +2995,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1283818904886992255, guid: 9fe4c6ed1c07fc34f936c8403478c1a0, type: 3}
+      propertyPath: deathSfxIndex
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5654181891300853945, guid: 9fe4c6ed1c07fc34f936c8403478c1a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3

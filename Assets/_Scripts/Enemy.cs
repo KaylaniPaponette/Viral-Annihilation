@@ -3,9 +3,14 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    // --- OLD CODE ---
     // Audio components
-    private AudioSource source;
-    public AudioClip DeathClip;
+    //private AudioSource source;
+    //public AudioClip DeathClip;
+
+    // --- ADDED this line ---
+    [Header("Sound")]
+    public int deathSfxIndex; // The index of the death sound in the SoundManager
 
     // Animation components
     private Animator animator;
@@ -13,7 +18,7 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        source = GetComponent<AudioSource>();
+        //source = GetComponent<AudioSource>();   --- REMOVED this line ---
         animator = GetComponent<Animator>();
     }
 
@@ -44,10 +49,12 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
         isDead = true; // Prevent multiple calls
 
-        // Play death sound if available
-        if (source && DeathClip)
+
+        // --- UPDATED CODE ---
+        // Play death sound through the SoundManager
+        if (SoundManager.Instance != null)
         {
-            source.PlayOneShot(DeathClip);
+            SoundManager.Instance.PlaySFX(deathSfxIndex);
         }
 
         // Trigger death animation instead of particle system
@@ -74,10 +81,12 @@ public class Enemy : MonoBehaviour
             destructionDelay = Mathf.Max(destructionDelay, animationLength);
         }
 
-        // Get audio length if available
-        if (DeathClip)
+        // --- UPDATED CODE ---
+        // Get audio length from the SoundManager
+        if (SoundManager.Instance != null && deathSfxIndex >= 0 && deathSfxIndex < SoundManager.Instance.sfxSound.Length)
         {
-            destructionDelay = Mathf.Max(destructionDelay, DeathClip.length);
+            AudioClip clip = SoundManager.Instance.sfxSound[deathSfxIndex];
+            destructionDelay = Mathf.Max(destructionDelay, clip.length);
         }
 
         // Wait for the calculated time
