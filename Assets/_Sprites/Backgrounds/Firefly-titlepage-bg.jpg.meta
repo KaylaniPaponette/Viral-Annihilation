@@ -186,7 +186,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Firefly-titlepage-bg_0: 2464345535404190679
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

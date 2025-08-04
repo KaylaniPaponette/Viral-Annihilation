@@ -144,7 +144,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -162,8 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 8300000, guid: 060c700a3a2497d4ca058141c992ef5c, type: 3}
-  EnemyParticles: {fileID: 265182729526516240, guid: 40031a178c32b0b44be2bc260c4d924a, type: 3}
+  deathSfxIndex: 0
 --- !u!114 &5278149919937051169
 MonoBehaviour:
   m_ObjectHideFlags: 0

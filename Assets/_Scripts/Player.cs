@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
         if (nukeThrown) return;
 
         // Ensure the collider is set to trigger to prevent physics interactions while dragging
-        if (_collider != null) _collider.isTrigger = true;
+        if (_collider != null) _collider.enabled = false;
 
         // Change color and enable line renderer
         GetComponent<SpriteRenderer>().color = Color.red;
@@ -146,7 +146,7 @@ public class Player : MonoBehaviour
         if (nukeThrown) return;
 
         // Reset the collider to not be a trigger
-        if (_collider != null) _collider.isTrigger = false;
+        if (_collider != null) _collider.enabled = true;
 
         nukeThrown = true;
         GetComponent<SpriteRenderer>().color = Color.white;
