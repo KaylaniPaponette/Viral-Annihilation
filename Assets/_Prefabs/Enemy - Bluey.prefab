@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e62a83e2e7941428d13f682f3565ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathSfxIndex: 0
+  deathSfxIndex: 3
 --- !u!114 &5278149919937051169
 MonoBehaviour:
   m_ObjectHideFlags: 0
