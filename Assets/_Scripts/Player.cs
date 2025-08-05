@@ -13,6 +13,9 @@ public class Player : MonoBehaviour
 
     private bool nukeThrown;
 
+    [Tooltip("The maximum distance the player can drag the nuke from its start point.")]
+    public float maxDragDistance = 3f;
+
     [Tooltip("Time in seconds before the scene resets after the nuke stops moving.")]
     public float resetTimeAfterStop = 2f; 
     // This is used to determine when to reset the player
@@ -167,12 +170,23 @@ public class Player : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        // If a nuke has already been thrown, do nothing
         if (nukeThrown) return;
 
-        // Update position based on mouse drag
-        Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = new Vector3(newPosition.x, newPosition.y, 0);
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0;
+
+        // This calculates the distance and direction from the start point
+        Vector3 direction = mousePosition - startingPos;
+
+        // This is the key part: if the distance is too big...
+        if (direction.magnitude > maxDragDistance)
+        {
+            // ...it clamps the position to the maximum allowed distance.
+            direction = direction.normalized * maxDragDistance;
+        }
+
+        // This sets the final, constrained position
+        transform.position = startingPos + direction;
     }
 
     // Function to update shot count UI text

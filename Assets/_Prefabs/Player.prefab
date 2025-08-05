@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DirectionalInitialPosForce: 300
+  maxDragDistance: 5
   resetTimeAfterStop: 0.8
   shotCountText: {fileID: 0}
   tensionSfxIndex: 0
