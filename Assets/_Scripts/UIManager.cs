@@ -86,6 +86,17 @@ public class UIManager : MonoBehaviour
         // Set the score text, using N0 for formatting the number with commas for readability (e.g., 12,345)
         finalScoreText.text = "Score: " + score.ToString("N0");
     }
-
+    /// <summary>
+    /// This public method is called by the "Continue" button's OnClick event.
+    /// It acts as a bridge to the GameManager singleton.
+    /// </summary>
+    public void OnContinueButtonPressed()
+    {
+        // Find the active GameManager instance and tell it to proceed.
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ProceedToNextLevel();
+        }
+    }
 
 }

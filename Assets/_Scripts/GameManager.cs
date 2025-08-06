@@ -1,3 +1,6 @@
+//=====GameManager.cs (finally working)=====
+
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -21,6 +24,9 @@ public class GameManager : MonoBehaviour
     // Game state
     private bool isTransitioningToGameOver = false;
     private bool isTransitioningToNextLevel = false;
+
+    [Header("Scoring")]
+    [SerializeField] public int baseScore = 10000;
 
     // Level management
     [System.Serializable]
@@ -264,48 +270,47 @@ public class GameManager : MonoBehaviour
 
         isTimerRunning = false;
 
-        // --- SCORING LOGIC EXAMPLE ---
+        // This prevents the player from shooting while the level complete screen is up.
+        isTransitioningToNextLevel = true;
+
+        // --- SCORING LOGIC (baseScore is now a variable from the top of the script) ---
         int shotsUsed = shotCount;
         float timeTaken = levelTimer;
-        int baseScore = 10000;
+        // int baseScore = 10000; // <<< THIS LINE IS REMOVED
         float timeMultiplier = Mathf.Max(1, 100 / timeTaken);
         int shotsLeft = maxShots - shotsUsed;
         float shotMultiplier = 1 + (shotsLeft * 0.5f);
         int finalScore = Mathf.RoundToInt(baseScore * timeMultiplier * shotMultiplier);
         Debug.Log($"LEVEL COMPLETE! Time: {timeTaken:F2}s, Shots: {shotsUsed}. Final Score: {finalScore}");
-        // --- END OF SCORING LOGIC ---
 
-        isTransitioningToNextLevel = true;
-        Debug.Log($"Completing level: {currentLevel}");
+        // --- START OF MODIFIED LOGIC ---
 
-        shotCount = 0;
-        PlayerPrefs.SetInt("ShotCount", 0);
-        PlayerPrefs.Save();
-
-        if (OnShotCountChanged != null)
-        {
-            OnShotCountChanged(shotCount);
-        }
+        // Tell the UIManager to show the level complete screen with the final score
         if (UIManager.Instance != null)
         {
-            UIManager.Instance.UpdateShotCount(shotCount, maxShots);
-        }
-
-        string nextLevel = GetNextLevelName(currentLevel);
-
-        if (!string.IsNullOrEmpty(nextLevel))
-        {
-            Debug.Log($"Going to next level: {nextLevel}");
-            Invoke("LoadNextLevel", 0.5f);
+            UIManager.Instance.ShowLevelCompleteScreen(finalScore);
         }
         else
         {
-            Debug.LogWarning($"No next level found for {currentLevel} - check your level sequence configuration!");
+            Debug.LogError("UIManager not found! Cannot display level complete screen. Loading next level directly.");
+            ProceedToNextLevel(); // Fallback in case the UI Manager is missing
         }
+
+        // We no longer automatically load the next level here.
+        // The "Continue" button will do that.
+
+        // --- END OF MODIFIED LOGIC ---
     }
 
-    void LoadNextLevel()
+    // Change this method from 'private void LoadNextLevel()' to 'public void ProceedToNextLevel()'
+    public void ProceedToNextLevel()
     {
+        // Reset state for the next level
+        shotCount = 0;
+        PlayerPrefs.SetInt("ShotCount", 0);
+        PlayerPrefs.Save();
+        if (OnShotCountChanged != null) OnShotCountChanged(shotCount);
+
         string nextLevel = GetNextLevelName(currentLevel);
         if (!string.IsNullOrEmpty(nextLevel))
         {
