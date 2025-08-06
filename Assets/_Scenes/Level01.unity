@@ -666,6 +666,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5484463403743569792, guid: 4fa7b415d9307d94faa7480c4c5ed926, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 573137154}
+    - target: {fileID: 5484463403743569792, guid: 4fa7b415d9307d94faa7480c4c5ed926, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnContinueButtonPressed
+      objectReference: {fileID: 0}
     - target: {fileID: 5539893497084987039, guid: 4fa7b415d9307d94faa7480c4c5ed926, type: 3}
       propertyPath: m_Name
       value: HUD
@@ -775,6 +783,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 755878761181687877, guid: 4fa7b415d9307d94faa7480c4c5ed926, type: 3}
   m_PrefabInstance: {fileID: 573137151}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &573137154 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5639348001068913374, guid: 4fa7b415d9307d94faa7480c4c5ed926, type: 3}
+  m_PrefabInstance: {fileID: 573137151}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ab68a58be28914e85f79044f2ae4c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
