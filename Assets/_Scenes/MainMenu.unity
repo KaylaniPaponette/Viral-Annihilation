@@ -1280,6 +1280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 645621251c2cc4747b12f65d5b8aa0fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseScore: 10000
   shotCount: 0
   maxShots: 3
   defaultBgmIndex: 13
