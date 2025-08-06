@@ -5,6 +5,8 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+
+    public AngryCameraFollow mainCamera;
     private Collider2D _collider;
 
     Vector3 startingPos;
@@ -17,16 +19,18 @@ public class Player : MonoBehaviour
     public float maxDragDistance = 3f;
 
     [Tooltip("Time in seconds before the scene resets after the nuke stops moving.")]
-    public float resetTimeAfterStop = 2f; 
+    public float resetTimeAfterStop = 2f;
     // This is used to determine when to reset the player
     float TimeSinceLaunch;
 
-    public TextMeshProUGUI shotCountText; // UI Text reference
+    // The direct reference to the UI text has been removed. UIManager now handles this.
+    // public TextMeshProUGUI shotCountText; // UI Text reference <<< THIS LINE IS GONE
+
     //AudioSource source;
     //public AudioClip TensionClip;
     //public AudioClip LaunchClip;
 
-        // --- NEW SFX VARIABLES ---
+    // --- NEW SFX VARIABLES ---
     [Header("Sound Effect Indexes")]
     public int tensionSfxIndex;
     public int launchSfxIndex;
@@ -42,7 +46,9 @@ public class Player : MonoBehaviour
 
         startingPos = transform.position;
         //source = GetComponent<AudioSource>();
-        UpdateShotCountUI();
+
+        // The call to UpdateShotCountUI() is removed because UIManager handles UI updates now.
+        // UpdateShotCountUI(); <<< THIS LINE IS GONE
 
         // Subscribe to events with try/catch
         try
@@ -54,31 +60,13 @@ public class Player : MonoBehaviour
             Debug.LogWarning("Could not subscribe to GameManager events: " + e.Message);
         }
     }
-    //private void Awake()
-    //{
-    //    startingPos = transform.position;
-    //    source = GetComponent<AudioSource>();
-    //    UpdateShotCountUI();
 
-    //    // Subscribe to events
-    //    if (GameManager.OnShotCountChanged != null)
-    //    {
-    //        GameManager.OnShotCountChanged += OnShotCountChanged;
-    //    }
-    //}
-
-    //private void OnDestroy()
-    //{
-    //    // Unsubscribe from events
-    //    if (GameManager.OnShotCountChanged != null)
-    //    {
-    //        GameManager.OnShotCountChanged -= OnShotCountChanged;
-    //    }
-    //}
-
+    // This method now only exists to potentially trigger other logic in the future.
+    // Its original purpose was to update the UI, which is no longer needed here.
     private void OnShotCountChanged(int newCount)
     {
-        UpdateShotCountUI();
+        // We can leave this empty or add other player-specific logic that needs to happen
+        // when the shot count changes.
     }
 
     private void Update()
@@ -92,11 +80,11 @@ public class Player : MonoBehaviour
         // Check if the projectile is out of bounds or has stopped moving
         // Note: The original condition was commented out, so we are using the new one
         //if (transform.position.x <= -30 || transform.position.x >= 20
-        //    || transform.position.y <= -20 || transform.position.y >= 20
-        //    || TimeSinceLaunch >= 2f)
+        //  || transform.position.y <= -20 || transform.position.y >= 20
+        //  || TimeSinceLaunch >= 2f)
         if (nukeThrown && (transform.position.x <= -30 || transform.position.x >= 20
-                        || transform.position.y <= -20 || transform.position.y >= 20
-                        || TimeSinceLaunch >= resetTimeAfterStop))
+                                || transform.position.y <= -20 || transform.position.y >= 20
+                                || TimeSinceLaunch >= resetTimeAfterStop))
 
         {
             // Mark that we're resetting to prevent multiple calls
@@ -127,15 +115,12 @@ public class Player : MonoBehaviour
         if (nukeThrown) return;
 
         // Ensure the collider is set to trigger to prevent physics interactions while dragging
-        if (_collider != null) _collider.enabled = false;
+        //if (_collider != null) _collider.enabled = false;
 
         // Change color and enable line renderer
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
-        //source.clip = TensionClip;
-        //source.Play();
 
-        // --- UPDATED CODE ---
         // Play the tension sound via the SoundManager
         if (SoundManager.Instance != null)
         {
@@ -149,7 +134,7 @@ public class Player : MonoBehaviour
         if (nukeThrown) return;
 
         // Reset the collider to not be a trigger
-        if (_collider != null) _collider.enabled = true;
+        //if (_collider != null) _collider.enabled = true;
 
         nukeThrown = true;
         GetComponent<SpriteRenderer>().color = Color.white;
@@ -157,10 +142,10 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
         GetComponent<Rigidbody2D>().gravityScale = 1;
         GetComponent<LineRenderer>().enabled = false;
-        //source.clip = LaunchClip;
-        //source.Play();
-
-        // --- UPDATED CODE ---
+        if (mainCamera != null)
+        {
+            mainCamera.StartFollowing();
+        }
         // Play the launch sound via the SoundManager
         if (SoundManager.Instance != null)
         {
@@ -189,562 +174,6 @@ public class Player : MonoBehaviour
         transform.position = startingPos + direction;
     }
 
-    // Function to update shot count UI text
-    private void UpdateShotCountUI()
-    {
-        if (shotCountText != null && GameManager.Instance != null)
-        {
-            int shotsLeft = GameManager.Instance.maxShots - GameManager.Instance.GetShotCount();
-            shotCountText.text = "Shots Left: " + shotsLeft;
-        }
-    }
+    // This function has been removed because the UIManager now handles all UI updates.
+    // private void UpdateShotCountUI() { ... } <<< THIS FUNCTION IS GONE
 }
-
-
-//-------------------------------------------------------
-//using UnityEngine;
-//using UnityEngine.UI;
-//using UnityEngine.SceneManagement;
-//using TMPro;
-//public class Player : MonoBehaviour
-//{
-//    Vector3 startingPos;
-//    private Vector2 directiontoInitialPos;
-//    public float DirectionalInitialPosForce;
-//    private bool nukeThrown;
-//    float TimeSinceLaunch;
-//    public TextMeshProUGUI shotCountText; // UI Text reference
-//    AudioSource source;
-//    public AudioClip TensionClip;
-//    public AudioClip LaunchClip;
-
-//    // Game settings
-//    public int maxShots = 3;
-//    private int shotCount = 0;
-//    public string gameOverSceneName = "_Scenes/GameOver";
-
-//    // Flag to prevent multiple resets
-//    private bool isResetting = false;
-
-//    private void Awake()
-//    {
-//        startingPos = transform.position;
-//        source = GetComponent<AudioSource>();
-
-//        // If GameManager exists, use it for shot count
-//        if (GameManager.Instance != null)
-//        {
-//            shotCount = GameManager.Instance.GetShotCount();
-//            Debug.Log($"Player initialized with shot count from GameManager: {shotCount}");
-//        }
-//        else
-//        {
-//            // Otherwise use PlayerPrefs directly
-//            shotCount = PlayerPrefs.GetInt("ShotCount", 0);
-//            Debug.Log($"Player initialized with shot count from PlayerPrefs: {shotCount}");
-//        }
-
-//        UpdateShotCountUI();
-//    }
-
-//    private void OnEnable()
-//    {
-//        // Subscribe to GameManager events
-//        GameManager.OnShotCountChanged += OnShotCountChanged;
-//    }
-
-//    private void OnDisable()
-//    {
-//        // Unsubscribe from GameManager events
-//        GameManager.OnShotCountChanged -= OnShotCountChanged;
-//    }
-
-//    private void OnShotCountChanged(int newCount)
-//    {
-//        Debug.Log($"Shot count changed event received: {newCount}");
-//        UpdateShotCountUI();
-//    }
-
-//    private void Update()
-//    {
-//        // Skip logic if we're already resetting
-//        if (isResetting)
-//            return;
-
-//        GetComponent<LineRenderer>().SetPosition(1, startingPos);
-//        GetComponent<LineRenderer>().SetPosition(0, transform.position);
-
-//        // Check if the projectile is out of bounds or has stopped moving
-//        if (transform.position.x <= -30 || transform.position.x >= 20
-//            || transform.position.y <= -20 || transform.position.y >= 20
-//            || TimeSinceLaunch >= 2f)
-//        {
-//            // Mark that we're resetting to prevent multiple calls
-//            isResetting = true;
-
-//            // Increment shot count
-//            IncrementShotCount();
-
-//            // Reload current scene (unless we should go to game over)
-//            if (shotCount < maxShots)
-//            {
-//                string currentLoadScene = SceneManager.GetActiveScene().name;
-//                SceneManager.LoadScene(currentLoadScene);
-//            }
-//        }
-
-//        if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)
-//        {
-//            TimeSinceLaunch += Time.deltaTime;
-//        }
-//    }
-
-//    // Function to increment shot count with built-in Game Over check
-//    private void IncrementShotCount()
-//    {
-//        shotCount++;
-//        Debug.Log($"Shot count increased to {shotCount}/{maxShots}");
-
-//        // Save to PlayerPrefs
-//        PlayerPrefs.SetInt("ShotCount", shotCount);
-//        PlayerPrefs.Save();
-
-//        // Update UI
-//        UpdateShotCountUI();
-
-//        // Notify GameManager if it exists
-//        if (GameManager.Instance != null)
-//        {
-//            GameManager.Instance.IncrementShotCount();
-//        }
-
-//        //// IMPORTANT: Direct Game Over check as a fallback
-//        //if (shotCount >= maxShots)
-//        //{
-//        //    Debug.Log("Maximum shots reached - Going to Game Over scene directly");
-
-//        //    // Reset shot count
-//        //    shotCount = 0;
-//        //    PlayerPrefs.SetInt("ShotCount", 0);
-//        //    PlayerPrefs.Save();
-
-//        //    // If GameManager exists, use it
-//        //    if (GameManager.Instance != null)
-//        //    {
-//        //        GameManager.Instance.ForceGameOver();
-//        //    }
-//        //    else
-//        //    {
-//        //        // Direct load as fallback
-//        //        Debug.Log("Loading Game Over scene directly from Player script");
-//        //        SceneManager.LoadScene(gameOverSceneName);
-//        //    }
-//        //}
-//        // Replace your GameOver loading code with this:
-//        if (shotCount >= maxShots)
-//        {
-//            Debug.Log("Maximum shots reached - Loading GameOver scene directly");
-//            shotCount = 0;
-//            PlayerPrefs.SetInt("ShotCount", 0);
-//            PlayerPrefs.Save();
-
-//            Debug.Log("ABOUT TO LOAD GAMEOVER");
-//            SceneManager.LoadScene("_Scenes/GameOver");
-//            Debug.Log("AFTER LOADING GAMEOVER"); // This won't print if scene loads
-//        }
-//    }
-
-//    private void OnMouseDown()
-//    {
-//        GetComponent<SpriteRenderer>().color = Color.red;
-//        GetComponent<LineRenderer>().enabled = true;
-//        source.clip = TensionClip;
-//        source.Play();
-//    }
-
-//    private void OnMouseUp()
-//    {
-//        nukeThrown = true;
-//        GetComponent<SpriteRenderer>().color = Color.white;
-//        directiontoInitialPos = startingPos - transform.position;
-//        GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
-//        GetComponent<Rigidbody2D>().gravityScale = 1;
-//        GetComponent<LineRenderer>().enabled = false;
-//        source.clip = LaunchClip;
-//        source.Play();
-//    }
-
-//    private void OnMouseDrag()
-//    {
-//        Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//        transform.position = new Vector3(newPosition.x, newPosition.y, 0);
-//    }
-
-//    // Function to update shot count UI text
-//    private void UpdateShotCountUI()
-//    {
-//        if (shotCountText != null)
-//        {
-//            int shotsLeft = maxShots - shotCount;
-//            shotCountText.text = "Shots Left: " + shotsLeft;
-//            Debug.Log($"Updated UI: Shots Left = {shotsLeft}");
-//        }
-//    }
-//}
-
-//--------------------------------------------------------------------
-//using UnityEngine;
-//using UnityEngine.UI;
-//using TMPro;
-//public class Player : MonoBehaviour
-//{
-//    Vector3 startingPos;
-//    private Vector2 directiontoInitialPos;
-//    public float DirectionalInitialPosForce;
-//    private bool nukeThrown;
-//    float TimeSinceLaunch;
-//    public TextMeshProUGUI shotCountText; // UI Text reference
-//    AudioSource source;
-//    public AudioClip TensionClip;
-//    public AudioClip LaunchClip;
-
-//    // Flag to prevent multiple calls when resetting
-//    private bool isResetting = false;
-
-//    private void Awake()
-//    {
-//        startingPos = transform.position;
-//        source = GetComponent<AudioSource>();
-//        UpdateShotCountUI(); // Update UI at start
-
-//        // Subscribe to shot count changed events
-//        GameManager.OnShotCountChanged += OnShotCountChanged;
-//    }
-
-//    private void OnDestroy()
-//    {
-//        // Unsubscribe from events
-//        GameManager.OnShotCountChanged -= OnShotCountChanged;
-//    }
-
-//    private void OnShotCountChanged(int newCount)
-//    {
-//        UpdateShotCountUI();
-//    }
-
-//    private void Update()
-//    {
-//        // Skip logic if we're already resetting
-//        if (isResetting)
-//            return;
-
-//        GetComponent<LineRenderer>().SetPosition(1, startingPos);
-//        GetComponent<LineRenderer>().SetPosition(0, transform.position);
-
-//        // Check if the projectile is out of bounds or has stopped moving
-//        if (transform.position.x <= -30 || transform.position.x >= 20
-//            || transform.position.y <= -20 || transform.position.y >= 20
-//            || TimeSinceLaunch >= 2f)
-//        {
-//            // Mark that we're resetting to prevent multiple calls
-//            isResetting = true;
-
-//            // Let the GameManager handle the shot count
-//            if (GameManager.Instance != null)
-//            {
-//                GameManager.Instance.IncrementShotCount();
-//                UpdateShotCountUI();
-//            }
-
-//            // Reload current scene
-//            string currentLoadScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-//            UnityEngine.SceneManagement.SceneManager.LoadScene(currentLoadScene);
-//        }
-
-//        if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)
-//        {
-//            TimeSinceLaunch += Time.deltaTime;
-//        }
-//    }
-
-//    private void OnMouseDown()
-//    {
-//        GetComponent<SpriteRenderer>().color = Color.red;
-//        GetComponent<LineRenderer>().enabled = true;
-//        source.clip = TensionClip;
-//        source.Play();
-//    }
-
-//    private void OnMouseUp()
-//    {
-//        nukeThrown = true;
-//        GetComponent<SpriteRenderer>().color = Color.white;
-//        directiontoInitialPos = startingPos - transform.position;
-//        GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
-//        GetComponent<Rigidbody2D>().gravityScale = 1;
-//        GetComponent<LineRenderer>().enabled = false;
-//        source.clip = LaunchClip;
-//        source.Play();
-//    }
-
-//    private void OnMouseDrag()
-//    {
-//        Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//        transform.position = new Vector3(newPosition.x, newPosition.y, 0);
-//    }
-
-//    // Function to update shot count UI text
-//    private void UpdateShotCountUI()
-//    {
-//        if (shotCountText != null && GameManager.Instance != null)
-//        {
-//            int shotsLeft = GameManager.Instance.maxShots - GameManager.Instance.GetShotCount();
-//            shotCountText.text = "Shots Left: " + shotsLeft;
-//        }
-//    }
-//}
-
-
-//-------------------------------------------------------------------
-//using UnityEngine;
-//using UnityEngine.UI;
-//using TMPro;
-//public class Player : MonoBehaviour
-//{
-//    Vector3 startingPos;
-//    private Vector2 directiontoInitialPos;
-//    public float DirectionalInitialPosForce;
-//    private bool nukeThrown;
-//    float TimeSinceLaunch;
-//    public TextMeshProUGUI shotCountText; // UI Text reference
-//    AudioSource source;
-//    public AudioClip TensionClip;
-//    public AudioClip LaunchClip;
-
-//    private void Awake()
-//    {
-//        startingPos = transform.position;
-//        source = GetComponent<AudioSource>();
-//        UpdateShotCountUI(); // Update UI at start
-
-//        // Subscribe to shot count changed events
-//        GameManager.OnShotCountChanged += OnShotCountChanged;
-//    }
-
-//    private void OnDestroy()
-//    {
-//        // Unsubscribe from events
-//        GameManager.OnShotCountChanged -= OnShotCountChanged;
-//    }
-
-//    private void OnShotCountChanged(int newCount)
-//    {
-//        UpdateShotCountUI();
-//    }
-
-//    private void Update()
-//    {
-//        GetComponent<LineRenderer>().SetPosition(1, startingPos);
-//        GetComponent<LineRenderer>().SetPosition(0, transform.position);
-
-//        if (transform.position.x <= -30 || transform.position.x >= 20
-//            || transform.position.y <= -20 || transform.position.y >= 20
-//            || TimeSinceLaunch >= 2f)
-//        {
-//            // Let the GameManager handle the shot count
-//            GameManager.Instance.IncrementShotCount();
-//            UpdateShotCountUI();
-
-//            // Reload current scene
-//            string currentLoadScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-//            UnityEngine.SceneManagement.SceneManager.LoadScene(currentLoadScene);
-//        }
-
-//        if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)
-//        {
-//            TimeSinceLaunch += Time.deltaTime;
-//        }
-//    }
-
-//    private void OnMouseDown()
-//    {
-//        GetComponent<SpriteRenderer>().color = Color.red;
-//        GetComponent<LineRenderer>().enabled = true;
-//        source.clip = TensionClip;
-//        source.Play();
-//    }
-
-//    private void OnMouseUp()
-//    {
-//        nukeThrown = true;
-//        GetComponent<SpriteRenderer>().color = Color.white;
-//        directiontoInitialPos = startingPos - transform.position;
-//        GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
-//        GetComponent<Rigidbody2D>().gravityScale = 1;
-//        GetComponent<LineRenderer>().enabled = false;
-//        source.clip = LaunchClip;
-//        source.Play();
-//    }
-
-//    private void OnMouseDrag()
-//    {
-//        Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//        transform.position = new Vector3(newPosition.x, newPosition.y, 0);
-//    }
-
-//    // Function to update shot count UI text
-//    private void UpdateShotCountUI()
-//    {
-//        if (shotCountText != null && GameManager.Instance != null)
-//        {
-//            int shotsLeft = GameManager.Instance.maxShots - GameManager.Instance.GetShotCount();
-//            shotCountText.text = "Shots Left: " + shotsLeft;
-//        }
-//    }
-//}
-
-
-/*
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using TMPro;
-
-public class Player : MonoBehaviour
-{
-
-    Vector3 startingPos;
-    private Vector2 directiontoInitialPos;
-    public float DirectionalInitialPosForce;
-    private bool nukeThrown;
-    float TimeSinceLaunch;
-    private int ShotCount;
-
-    public TextMeshProUGUI shotCountText; // UI Text reference
-
-    public int maxShots = 3; // Max shots before Game Over
-
-
-    AudioSource source;
-
-    public AudioClip TensionClip;
-    public AudioClip LaunchClip;
-
-    private void Awake()
-    {
-        startingPos = transform.position;
-        source = GetComponent<AudioSource>();
-
-        ShotCount = PlayerPrefs.GetInt("ShotCount", 0);
-        UpdateShotCountUI(); // Update UI at start
-    }
-
-    private void Update()
-    {
-
-        GetComponent<LineRenderer>().SetPosition(1, startingPos);
-        GetComponent<LineRenderer>().SetPosition(0, transform.position);
-
-        if (transform.position.x <= -30 || transform.position.x >= 20
-            || transform.position.y <= -20 || transform.position.y >= 20
-            || TimeSinceLaunch >= 2f)
-        {
-            ShotCount++;
-            PlayerPrefs.SetInt("ShotCount", ShotCount);
-            PlayerPrefs.Save();
-
-            UpdateShotCountUI(); // Update UI at start
-
-            string currentLoadScene = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(currentLoadScene);
-        }
-
-        if (ShotCount >= maxShots)
-        {
-            PlayerPrefs.SetInt("ShotCount", 0); // Reset the counter
-            PlayerPrefs.Save();
-            SceneManager.LoadScene("_Scenes/GameOver");
-        }
-
-
-        if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)
-        {
-            TimeSinceLaunch += Time.deltaTime;
-        }
-
-
-    }
-
-
-
-    private void OnMouseDown()
-    {
-        GetComponent<SpriteRenderer>().color = Color.red;
-        GetComponent<LineRenderer>().enabled = true;
-        source.clip = TensionClip;
-        source.Play();
-
-    }
-
-    private void OnMouseUp()
-    {
-        nukeThrown = true;
-
-        GetComponent<SpriteRenderer>().color = Color.white;
-        directiontoInitialPos = startingPos - transform.position;
-        GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
-
-        GetComponent<Rigidbody2D>().gravityScale = 1;
-        GetComponent<LineRenderer>().enabled = false;
-
-        source.clip = LaunchClip;
-        source.Play();
-
-    }
-
-    private void OnMouseDrag()
-    {
-        Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = new Vector3(newPosition.x, newPosition.y, 0);
-    }
-
-    // Function to update UI text
-    private void UpdateShotCountUI()
-    {
-        if (shotCountText != null)
-        {
-            int shotsLeft = maxShots - ShotCount;
-            shotCountText.text = "Shots Left: " + shotsLeft;
-        }
-    }
-}
-
-*/
-
-//------------------------------------------------
-//// Start is called once before the first execution of Update after the MonoBehaviour is created
-//void Start()
-//{
-
-//}
-
-//// Update is called once per frame
-//void Update()
-//{
-
-//    if (Input.GetMouseButtonDown(0))
-//    {
-//        GetComponent<SpriteRenderer>().color = Color.blue;
-//    }
-
-//    if (Input.GetMouseButtonUp(0))
-//    {
-//        GetComponent<SpriteRenderer>().color = Color.white;
-//    }
-
-//    if (Input.GetMouseButtonDown(0))
-//    {
-//        Vector3 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-//        transform.position = new Vector3(newPosition.x, newPosition.y, 0);
-//    }
-//}
