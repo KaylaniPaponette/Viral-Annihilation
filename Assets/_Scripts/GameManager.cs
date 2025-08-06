@@ -1,6 +1,4 @@
-//=====GameManager.cs (finally working)=====
-
-
+//=====GameManager.cs (with Pause Functionality)=====
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
@@ -18,7 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int shotCount = 0;
     public int maxShots = 3;
 
-    [Header("Music Settings")] // Optional: Add a header for organization
+    [Header("Music Settings")]
     public int defaultBgmIndex = 0;
 
     // Game state
@@ -38,7 +36,7 @@ public class GameManager : MonoBehaviour
     }
 
     public List<LevelData> levelSequence = new List<LevelData>();
-    private string currentLevel; // This now tracks the name of the scene we are on *before* a scene load occurs
+    private string currentLevel;
 
     // Enemy tag
     public string enemyTag = "Enemy";
@@ -60,21 +58,14 @@ public class GameManager : MonoBehaviour
     // Initialize the singleton
     void Awake()
     {
-        // Create singleton
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Debug.Log("GameManager initialized");
-
-            // Load shot count
             shotCount = PlayerPrefs.GetInt("ShotCount", 0);
             Debug.Log($"Starting with shot count: {shotCount}");
-
-            // Listen for scene changes
             SceneManager.sceneLoaded += OnSceneLoaded;
-
-            // Print level sequence for debugging
             PrintLevelSequence();
         }
         else
@@ -90,7 +81,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("NO LEVELS CONFIGURED IN LEVEL SEQUENCE! Please add levels in the inspector.");
         }
-
         foreach (LevelData level in levelSequence)
         {
             Debug.Log($"Level: {level.sceneName} -> Next: {level.nextLevelName}");
@@ -103,34 +93,22 @@ public class GameManager : MonoBehaviour
         string newSceneName = scene.name;
         Debug.Log($"Scene loaded: {newSceneName}");
 
-        // --- START OF MODIFIED LOGIC ---
-
         bool isGameplayLevel = IsLevelInSequence(newSceneName);
 
         if (isGameplayLevel)
         {
-            // Only reset the timer if the new scene is different from the level we were just on.
             if (newSceneName != this.currentLevel)
             {
                 Debug.Log($"New level '{newSceneName}' detected (was '{this.currentLevel}'). Resetting timer.");
                 levelTimer = 0f;
             }
-            else
-            {
-                Debug.Log($"Reloading level '{newSceneName}'. Timer will not reset.");
-            }
-
-            isTimerRunning = true; // The timer should always be running in a gameplay level.
+            isTimerRunning = true;
         }
         else
         {
-            // This is a non-gameplay scene (e.g., GameOver, MainMenu), so stop the timer.
             isTimerRunning = false;
         }
 
-
-
-        // Find the level data for the current scene to play music
         LevelData currentLevelData = GetLevelData(newSceneName);
         if (currentLevelData != null && SoundManager.Instance != null)
         {
@@ -141,7 +119,6 @@ public class GameManager : MonoBehaviour
             SoundManager.Instance.PlayBGM(defaultBgmIndex);
         }
 
-        // If this is the GameOver scene, reset game state
         if (newSceneName == "GameOver" || scene.path.Contains("/GameOver"))
         {
             Debug.Log("GameOver scene detected - resetting shot count");
@@ -151,24 +128,17 @@ public class GameManager : MonoBehaviour
             isTransitioningToGameOver = false;
             isTransitioningToNextLevel = false;
         }
-        else if (isGameplayLevel) // Only run gameplay setup if it's a gameplay level
+        else if (isGameplayLevel)
         {
-            // Ensure the UI is correct at the start of a level
             if (UIManager.Instance != null) UIManager.Instance.UpdateShotCount(shotCount, maxShots);
-
-            // Reset transitioning flags
             isTransitioningToNextLevel = false;
             enemyCheckTimer = 0;
-
-            // Check for enemies right away to establish baseline
             Invoke("InitialEnemyCheck", 0.2f);
         }
         else
         {
             Debug.Log($"Scene {newSceneName} is not in level sequence - not checking for enemies");
         }
-
-        // Finally, update the currentLevel to the scene we just loaded.
         this.currentLevel = newSceneName;
     }
 
@@ -188,7 +158,6 @@ public class GameManager : MonoBehaviour
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         Debug.Log($"Initial enemy check for {currentLevel}: Found {enemies.Length} enemies with tag '{enemyTag}'");
-
         if (enemies.Length == 0)
         {
             Debug.LogWarning($"No enemies found with tag '{enemyTag}'. Make sure your enemies have this tag.");
@@ -209,9 +178,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (LevelData level in levelSequence)
         {
-            if (level.sceneName == sceneName ||
-                level.sceneName.EndsWith("/" + sceneName) ||
-                sceneName.EndsWith("/" + level.sceneName))
+            if (level.sceneName == sceneName || level.sceneName.EndsWith("/" + sceneName) || sceneName.EndsWith("/" + level.sceneName))
             {
                 return true;
             }
@@ -230,12 +197,9 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.UpdateTimer(levelTimer);
         }
 
-        bool isGameplayLevel = IsLevelInSequence(currentLevel);
-
-        if (isGameplayLevel)
+        if (IsLevelInSequence(currentLevel))
         {
             enemyCheckTimer += Time.deltaTime;
-
             if (enemyCheckTimer >= enemyCheckInterval)
             {
                 enemyCheckTimer = 0;
@@ -246,14 +210,7 @@ public class GameManager : MonoBehaviour
 
     void CheckForEnemies()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-
-        if (Time.frameCount % 60 == 0)
-        {
-            Debug.Log($"Enemy check: Found {enemies.Length} enemies with tag '{enemyTag}'");
-        }
-
-        if (enemies.Length == 0)
+        if (GameObject.FindGameObjectsWithTag(enemyTag).Length == 0)
         {
             Debug.Log("All enemies destroyed - completing level");
             CompleteLevel();
@@ -262,50 +219,42 @@ public class GameManager : MonoBehaviour
 
     void CompleteLevel()
     {
-        if (isTransitioningToNextLevel)
-        {
-            Debug.Log("Already transitioning to next level - ignoring duplicate call");
-            return;
-        }
+        if (isTransitioningToNextLevel) return;
 
         isTimerRunning = false;
-
-        // This prevents the player from shooting while the level complete screen is up.
         isTransitioningToNextLevel = true;
 
-        // --- SCORING LOGIC (baseScore is now a variable from the top of the script) ---
-        int shotsUsed = shotCount;
-        float timeTaken = levelTimer;
-        // int baseScore = 10000; // <<< THIS LINE IS REMOVED
-        float timeMultiplier = Mathf.Max(1, 100 / timeTaken);
-        int shotsLeft = maxShots - shotsUsed;
+        // NEW: Pause the game when the level is complete
+        Time.timeScale = 0f;
+
+        // Scoring Logic
+        float timeMultiplier = Mathf.Max(1, 100 / levelTimer);
+        int shotsLeft = maxShots - shotCount;
         float shotMultiplier = 1 + (shotsLeft * 0.5f);
         int finalScore = Mathf.RoundToInt(baseScore * timeMultiplier * shotMultiplier);
-        Debug.Log($"LEVEL COMPLETE! Time: {timeTaken:F2}s, Shots: {shotsUsed}. Final Score: {finalScore}");
+        Debug.Log($"LEVEL COMPLETE! Time: {levelTimer:F2}s, Shots: {shotCount}. Final Score: {finalScore}");
 
-        // --- START OF MODIFIED LOGIC ---
+        // SEND 'finalScore' to LootLocker
+        // For now, we can just save it or add it to a total score
+        PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore", 0) + finalScore);
 
-        // Tell the UIManager to show the level complete screen with the final score
+        // Show the level complete screen
         if (UIManager.Instance != null)
         {
             UIManager.Instance.ShowLevelCompleteScreen(finalScore);
         }
         else
         {
-            Debug.LogError("UIManager not found! Cannot display level complete screen. Loading next level directly.");
-            ProceedToNextLevel(); // Fallback in case the UI Manager is missing
+            Debug.LogError("UIManager not found! Loading next level directly.");
+            ProceedToNextLevel();
         }
-
-        // We no longer automatically load the next level here.
-        // The "Continue" button will do that.
-
-        // --- END OF MODIFIED LOGIC ---
     }
 
-    // Change this method from 'private void LoadNextLevel()' to 'public void ProceedToNextLevel()'
     public void ProceedToNextLevel()
     {
-        // Reset state for the next level
+        // NEW: Unpause the game before loading the next level
+        Time.timeScale = 1f;
+
         shotCount = 0;
         PlayerPrefs.SetInt("ShotCount", 0);
         PlayerPrefs.Save();
@@ -325,46 +274,28 @@ public class GameManager : MonoBehaviour
 
     string GetNextLevelName(string currentLevelName)
     {
-        Debug.Log($"Looking for next level after: {currentLevelName}");
-
         foreach (LevelData level in levelSequence)
         {
-            if (level.sceneName == currentLevelName ||
-                level.sceneName.EndsWith("/" + currentLevelName) ||
-                currentLevelName.EndsWith("/" + level.sceneName))
+            if (level.sceneName == currentLevelName || level.sceneName.EndsWith("/" + currentLevelName) || currentLevelName.EndsWith("/" + level.sceneName))
             {
-                Debug.Log($"Found match! Next level: {level.nextLevelName}");
                 return level.nextLevelName;
             }
         }
-
         Debug.LogWarning($"No match found for {currentLevelName} in level sequence!");
         return "";
     }
 
     public void IncrementShotCount()
     {
-        if (isTransitioningToGameOver || isTransitioningToNextLevel)
-        {
-            Debug.Log("Already transitioning - ignoring shot");
-            return;
-        }
+        if (isTransitioningToGameOver || isTransitioningToNextLevel) return;
 
         shotCount++;
         Debug.Log($"Shot count increased to {shotCount}/{maxShots}");
-
         PlayerPrefs.SetInt("ShotCount", shotCount);
         PlayerPrefs.Save();
 
-        if (OnShotCountChanged != null)
-        {
-            OnShotCountChanged(shotCount);
-        }
-
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.UpdateShotCount(shotCount, maxShots);
-        }
+        if (OnShotCountChanged != null) OnShotCountChanged(shotCount);
+        if (UIManager.Instance != null) UIManager.Instance.UpdateShotCount(shotCount, maxShots);
 
         if (shotCount >= maxShots)
         {
@@ -376,10 +307,8 @@ public class GameManager : MonoBehaviour
     public void GoToGameOver()
     {
         if (isTransitioningToGameOver) return;
-
         isTransitioningToGameOver = true;
         Debug.Log("Going to GameOver scene");
-
         Invoke("LoadGameOverScene", 0.1f);
     }
 
