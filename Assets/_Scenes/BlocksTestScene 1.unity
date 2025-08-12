@@ -308,7 +308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 396819853}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: EnemyFocusPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -323,7 +323,7 @@ Transform:
   m_GameObject: {fileID: 396819852}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.3, y: 0.8782222, z: 0.28124487}
+  m_LocalPosition: {x: 6.9, y: 0.8782222, z: 0.28124487}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -347,7 +347,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2685656703711251820, guid: 162be6622a317f44a81ca9b17501e3ac, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.6159701
+      value: 4.4
       objectReference: {fileID: 0}
     - target: {fileID: 2685656703711251820, guid: 162be6622a317f44a81ca9b17501e3ac, type: 3}
       propertyPath: m_LocalPosition.z
@@ -668,7 +668,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7.3
+  orthographic size: 7.7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -693,7 +693,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.105708, y: 2.001251, z: -10.018106}
+  m_LocalPosition: {x: -6.5, y: 2.001251, z: -10.018106}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -749,9 +749,10 @@ MonoBehaviour:
   followSpeed: 8
   panSpeed: 0.5
   panToPlayerDuration: 2
-  leftLimit: -10
+  playerScreenOffsetX: 10
+  leftLimit: -30
   rightLimit: 30
-  bottomLimit: -5
+  bottomLimit: -6.5
   topLimit: 15
 --- !u!4 &570065101 stripped
 Transform:
@@ -2092,7 +2093,7 @@ Transform:
   m_GameObject: {fileID: 1884970575}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.6757958, y: -1.7589185, z: -0.010582101}
+  m_LocalPosition: {x: 4.3228974, y: -0.53202075, z: -0.00933392}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2588,7 +2589,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 883181848606373739, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.05
+      value: -6.2
       objectReference: {fileID: 0}
     - target: {fileID: 883181848606373739, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2633,6 +2634,22 @@ PrefabInstance:
     - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
       propertyPath: maxShots
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 519420034}
+    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
+      propertyPath: maxXBoundary
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
+      propertyPath: maxYBoundary
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
+      propertyPath: minYBoundary
+      value: -7.5
       objectReference: {fileID: 0}
     - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
       propertyPath: failCountText

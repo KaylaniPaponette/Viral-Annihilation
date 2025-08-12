@@ -20,11 +20,20 @@ public class Player : MonoBehaviour
 
     [Tooltip("Time in seconds before the scene resets after the nuke stops moving.")]
     public float resetTimeAfterStop = 2f;
+
+    // --- NEW BOUNDARY VARIABLES ---
+    [Header("Boundaries")]
+    [Tooltip("The minimum X position before the level resets.")]
+    [SerializeField] private float minXBoundary = -30f;
+    [Tooltip("The maximum X position before the level resets.")]
+    [SerializeField] private float maxXBoundary = 20f;
+    [Tooltip("The minimum Y position before the level resets.")]
+    [SerializeField] private float minYBoundary = -20f;
+    [Tooltip("The maximum Y position before the level resets.")]
+    [SerializeField] private float maxYBoundary = 20f;
+
     // This is used to determine when to reset the player
     float TimeSinceLaunch;
-
-    // The direct reference to the UI text has been removed. UIManager now handles this.
-    // public TextMeshProUGUI shotCountText; // UI Text reference <<< THIS LINE IS GONE
 
     //AudioSource source;
     //public AudioClip TensionClip;
@@ -47,9 +56,6 @@ public class Player : MonoBehaviour
         startingPos = transform.position;
         //source = GetComponent<AudioSource>();
 
-        // The call to UpdateShotCountUI() is removed because UIManager handles UI updates now.
-        // UpdateShotCountUI(); <<< THIS LINE IS GONE
-
         // Subscribe to events with try/catch
         try
         {
@@ -61,8 +67,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // This method now only exists to potentially trigger other logic in the future.
-    // Its original purpose was to update the UI, which is no longer needed here.
     private void OnShotCountChanged(int newCount)
     {
         // We can leave this empty or add other player-specific logic that needs to happen
@@ -78,12 +82,8 @@ public class Player : MonoBehaviour
         GetComponent<LineRenderer>().SetPosition(0, transform.position);
 
         // Check if the projectile is out of bounds or has stopped moving
-        // Note: The original condition was commented out, so we are using the new one
-        //if (transform.position.x <= -30 || transform.position.x >= 20
-        //  || transform.position.y <= -20 || transform.position.y >= 20
-        //  || TimeSinceLaunch >= 2f)
-        if (nukeThrown && (transform.position.x <= -30 || transform.position.x >= 20
-                                || transform.position.y <= -20 || transform.position.y >= 20
+        if (nukeThrown && (transform.position.x <= minXBoundary || transform.position.x >= maxXBoundary
+                                || transform.position.y <= minYBoundary || transform.position.y >= maxYBoundary
                                 || TimeSinceLaunch >= resetTimeAfterStop))
 
         {
@@ -174,6 +174,24 @@ public class Player : MonoBehaviour
         transform.position = startingPos + direction;
     }
 
-    // This function has been removed because the UIManager now handles all UI updates.
-    // private void UpdateShotCountUI() { ... } <<< THIS FUNCTION IS GONE
+    /// <summary>
+    /// Draws a yellow wireframe box in the Scene view to visualize the reset boundaries.
+    /// </summary>
+    private void OnDrawGizmos()
+    {
+        // Set the color for the Gizmo
+        Gizmos.color = Color.yellow;
+
+        // Calculate the center and size for the Gizmo box
+        float centerX = (minXBoundary + maxXBoundary) / 2f;
+        float centerY = (minYBoundary + maxYBoundary) / 2f;
+        Vector3 center = new Vector3(centerX, centerY, 0);
+
+        float sizeX = maxXBoundary - minXBoundary;
+        float sizeY = maxYBoundary - minYBoundary;
+        Vector3 size = new Vector3(sizeX, sizeY, 0);
+
+        // Draw the wireframe cube
+        Gizmos.DrawWireCube(center, size);
+    }
 }

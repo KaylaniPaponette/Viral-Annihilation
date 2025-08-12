@@ -24,17 +24,27 @@ public class AngryCameraFollow : MonoBehaviour
     public float panSpeed = 0.5f;
     [Tooltip("How long the initial pan from enemies to player takes.")]
     public float panToPlayerDuration = 2.0f;
+    [Tooltip("The horizontal offset from the player. A positive value keeps the player on the left of the screen.")]
+    public float playerScreenOffsetX = 5f;
 
     [Header("Camera Boundaries")]
+    [Tooltip("The leftmost point the camera's edge can reach.")]
     public float leftLimit = -10f;
+    [Tooltip("The rightmost point the camera's edge can reach.")]
     public float rightLimit = 30f;
+    [Tooltip("The bottommost point the camera's edge can reach.")]
     public float bottomLimit = -5f;
+    [Tooltip("The topmost point the camera's edge can reach.")]
     public float topLimit = 15f;
 
     private CameraState currentState;
     private Vector3 offset;
     private Vector3 lastMousePosition;
     private float panTimer;
+
+    // NEW VARIABLES for camera view size
+    private float cameraHeight;
+    private float cameraWidth;
 
     void Start()
     {
@@ -46,6 +56,11 @@ public class AngryCameraFollow : MonoBehaviour
         offset = new Vector3(0, 0, transform.position.z);
         currentState = CameraState.WaitingAtStart;
         panTimer = 0f;
+
+        // NEW: Calculate camera's view size in world units
+        Camera mainCamera = Camera.main;
+        cameraHeight = 2f * mainCamera.orthographicSize;
+        cameraWidth = cameraHeight * mainCamera.aspect;
     }
 
     void LateUpdate()
@@ -68,6 +83,17 @@ public class AngryCameraFollow : MonoBehaviour
                 HandleFollowingState();
                 break;
         }
+
+        // NEW: Consolidated and corrected clamping logic
+        float minX = leftLimit + cameraWidth / 2;
+        float maxX = rightLimit - cameraWidth / 2;
+        float minY = bottomLimit + cameraHeight / 2;
+        float maxY = topLimit - cameraHeight / 2;
+
+        Vector3 clampedPosition = transform.position;
+        clampedPosition.x = Mathf.Clamp(clampedPosition.x, minX, maxX);
+        clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
+        transform.position = clampedPosition;
     }
 
     void HandleWaitingState()
@@ -85,7 +111,7 @@ public class AngryCameraFollow : MonoBehaviour
         panTimer += Time.deltaTime;
         float panRatio = panTimer / panToPlayerDuration;
         Vector3 startPos = new Vector3(enemyFocusPoint.position.x, enemyFocusPoint.position.y, offset.z);
-        Vector3 endPos = new Vector3(player.position.x, player.position.y, offset.z);
+        Vector3 endPos = new Vector3(player.position.x + playerScreenOffsetX, player.position.y, offset.z);
         transform.position = Vector3.Lerp(startPos, endPos, panRatio);
 
         if (panRatio >= 1f)
@@ -97,6 +123,7 @@ public class AngryCameraFollow : MonoBehaviour
     void HandleIdleState()
     {
         Vector3 targetPosition = player.position + offset;
+        targetPosition.x += playerScreenOffsetX;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
 
         if (Input.GetMouseButtonDown(0))
@@ -114,13 +141,8 @@ public class AngryCameraFollow : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            // Calculate the difference in mouse position from the last frame
             Vector3 delta = lastMousePosition - Input.mousePosition;
-
-            // Move the camera using that delta, scaled by our pan speed
             transform.Translate(delta * panSpeed * Time.deltaTime, Space.World);
-
-            // Update the last mouse position for the next frame's calculation
             lastMousePosition = Input.mousePosition;
         }
 
@@ -128,26 +150,16 @@ public class AngryCameraFollow : MonoBehaviour
         {
             currentState = CameraState.Idle;
         }
-
-        // After every movement, clamp the camera's position to stay within the boundaries
-        transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, leftLimit, rightLimit),
-            Mathf.Clamp(transform.position.y, bottomLimit, topLimit),
-            offset.z // Keep the original Z position
-        );
+        // REMOVED clamping from here
     }
 
     void HandleFollowingState()
     {
         Vector3 targetPosition = player.position + offset;
+        targetPosition.x += playerScreenOffsetX;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
 
-        // Also clamp the following camera
-        transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, leftLimit, rightLimit),
-            Mathf.Clamp(transform.position.y, bottomLimit, topLimit),
-            offset.z
-        );
+        // REMOVED clamping from here
     }
 
     public void StartFollowing()
