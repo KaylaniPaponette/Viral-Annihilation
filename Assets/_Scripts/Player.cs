@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
             SoundManager.Instance.PlaySFX(tensionSfxIndex);
         }
     }
-
+    
     private void OnMouseUp()
     {
         if (nukeThrown) return;
