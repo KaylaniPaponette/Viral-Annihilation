@@ -46,6 +46,23 @@ public class AngryCameraFollow : MonoBehaviour
     private float cameraHeight;
     private float cameraWidth;
 
+    // --- NEW SINGLETON CODE ---
+    public static AngryCameraFollow Instance { get; private set; }
+
+    void Awake()
+    {
+        // This is the singleton pattern. It ensures there's only one instance.
+        if (Instance != null && Instance != this)
+        {
+            // If another instance exists, destroy this one.
+            Destroy(gameObject);
+        }
+        else
+        {
+            // Otherwise, set this as the one and only instance.
+            Instance = this;
+        }
+    }
     void Start()
     {
         if (enemyFocusPoint != null)
