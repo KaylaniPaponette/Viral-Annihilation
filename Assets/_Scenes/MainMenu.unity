@@ -1280,10 +1280,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 645621251c2cc4747b12f65d5b8aa0fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseScore: 10000
   shotCount: 0
   maxShots: 3
   defaultBgmIndex: 13
+  baseScore: 10000
   levelSequence:
   - sceneName: _Scenes/Level01
     nextLevelName: _Scenes/Level02
@@ -3262,6 +3262,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1976865636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1976865637}
+  - component: {fileID: 1976865638}
+  m_Layer: 0
+  m_Name: LootLockerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1976865637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976865636}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 444.55862, y: 950.5757, z: -15.217581}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1976865638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976865636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0abdf0d6c18954a41b56f7240ed3b6cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2018356606
 GameObject:
   m_ObjectHideFlags: 0
@@ -3862,3 +3906,4 @@ SceneRoots:
   - {fileID: 812472773}
   - {fileID: 718297249}
   - {fileID: 636733289}
+  - {fileID: 1976865637}

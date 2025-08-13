@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.lootlocker.lootlockersdk": {
+      "version": "https://github.com/LootLocker/unity-sdk.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "249dd50896398a60ca123f5b4aeb62d561b77e9f"
+    },
     "com.unity.2d.animation": {
       "version": "10.1.4",
       "depth": 1,

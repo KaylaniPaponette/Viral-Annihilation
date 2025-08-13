@@ -235,7 +235,12 @@ public class GameManager : MonoBehaviour
         Debug.Log($"LEVEL COMPLETE! Time: {levelTimer:F2}s, Shots: {shotCount}. Final Score: {finalScore}");
 
         // SEND 'finalScore' to LootLocker
-        // For now, we can just save it or add it to a total score
+        if (LootLockerManager.Instance != null)
+        {
+            LootLockerManager.Instance.SubmitScore(finalScore);
+        }
+
+        // Also save it or add it to a total score
         PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore", 0) + finalScore);
 
         // Show the level complete screen
