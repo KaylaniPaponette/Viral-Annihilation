@@ -37,6 +37,14 @@ public class AngryCameraFollow : MonoBehaviour
     [Tooltip("The topmost point the camera's edge can reach.")]
     public float topLimit = 15f;
 
+    [Header("Zoom Settings")]
+    [Tooltip("How sensitive the pinch-to-zoom is.")]
+    public float zoomSpeed = 0.01f;
+    [Tooltip("The smallest orthographic size (most zoomed in).")]
+    public float minZoom = 4f;
+    [Tooltip("The largest orthographic size (most zoomed out).")]
+    public float maxZoom = 12f;
+
     private CameraState currentState;
     private Vector3 offset;
     private Vector3 lastMousePosition;
@@ -82,6 +90,7 @@ public class AngryCameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
+        // First, run the state machine to determine where the camera wants to move.
         switch (currentState)
         {
             case CameraState.WaitingAtStart:
@@ -101,7 +110,16 @@ public class AngryCameraFollow : MonoBehaviour
                 break;
         }
 
-        // NEW: Consolidated and corrected clamping logic
+        // Second, handle any zoom input from the user.
+        HandleZoom();
+
+        // Third, RECALCULATE camera dimensions based on the new, potentially zoomed, size.
+        // This is critical for making sure the boundary clamp works correctly after zooming.
+        Camera mainCamera = Camera.main;
+        cameraHeight = 2f * mainCamera.orthographicSize;
+        cameraWidth = cameraHeight * mainCamera.aspect;
+
+        // Finally, apply the clamping logic to keep the camera within the level boundaries.
         float minX = leftLimit + cameraWidth / 2;
         float maxX = rightLimit - cameraWidth / 2;
         float minY = bottomLimit + cameraHeight / 2;
@@ -191,6 +209,37 @@ public class AngryCameraFollow : MonoBehaviour
         currentState = CameraState.Following;
     }
 
+    /// Handles the pinch-to-zoom functionality on touch devices.
+    void HandleZoom()
+    {
+        // We only proceed if there are exactly two touches on the screen.
+        if (Input.touchCount == 2)
+        {
+            // Get both touches.
+            Touch touchZero = Input.GetTouch(0);
+            Touch touchOne = Input.GetTouch(1);
+
+            // Find the position of each touch in the previous frame.
+            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+            // Calculate the distance between the touches in the previous and current frames.
+            float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+            float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+
+            // The difference in distance is how much the user pinched.
+            float difference = currentMagnitude - prevMagnitude;
+
+            // Get a reference to the main camera component.
+            Camera mainCamera = Camera.main;
+
+            // Modify the camera's orthographic size based on the pinch amount.
+            mainCamera.orthographicSize -= difference * zoomSpeed;
+
+            // Clamp the orthographic size to stay within our min and max zoom levels.
+            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
+        }
+    }
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
