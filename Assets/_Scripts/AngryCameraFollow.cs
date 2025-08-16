@@ -145,6 +145,13 @@ public class AngryCameraFollow : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            // NEW CHECK: If the player is being dragged, do nothing.
+            if (Player.IsBeingDragged)
+            {
+                return;
+            }
+
+            // The original logic now only runs if the player is NOT being dragged
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider == null)
             {

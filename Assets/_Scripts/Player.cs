@@ -24,11 +24,13 @@ public class Player : MonoBehaviour
     public int launchSfxIndex;
 
     private bool isResetting = false;
+    public static bool IsBeingDragged { get; private set; }
 
     private void Awake()
     {
         _collider = GetComponent<Collider2D>();
         startingPos = transform.position;
+        IsBeingDragged = false;
 
         try
         {
@@ -85,6 +87,7 @@ public class Player : MonoBehaviour
     private void OnMouseDown()
     {
         if (nukeThrown) return;
+        IsBeingDragged = true;
 
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
@@ -98,6 +101,7 @@ public class Player : MonoBehaviour
     private void OnMouseUp()
     {
         if (nukeThrown) return;
+        IsBeingDragged = false;
 
         nukeThrown = true;
         GetComponent<SpriteRenderer>().color = Color.white;
