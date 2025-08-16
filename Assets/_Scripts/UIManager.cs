@@ -1,6 +1,7 @@
 // ===== UIManager.cs =====
 using UnityEngine;
-using TMPro; // Make sure to include this for TextMeshPro elements
+using UnityEngine.SceneManagement;
+using TMPro; 
 
 public class UIManager : MonoBehaviour
 {
@@ -16,6 +17,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject levelCompletePanel;
     // A reference to the text that will display the final score
     [SerializeField] private TextMeshProUGUI finalScoreText;
+
+    // NEW
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseMenuPanel;
+    private bool isPaused = false;
 
     void Awake()
     {
@@ -37,6 +43,56 @@ public class UIManager : MonoBehaviour
         {
             levelCompletePanel.SetActive(false);
         }
+        // Ensure the Pause Menu is hidden at the start
+        if (pauseMenuPanel != null)
+        {
+            pauseMenuPanel.SetActive(false);
+        }
+    }
+    // NEW: A public method that can be called by a pause button
+    public void TogglePauseMenu()
+    {
+        isPaused = !isPaused; // Invert the paused state
+
+        if (isPaused)
+        {
+            PauseGame();
+        }
+        else
+        {
+            ResumeGame();
+        }
+    }
+
+    // NEW: Helper method to handle the logic for pausing
+    private void PauseGame()
+    {
+        Time.timeScale = 0f; // This freezes game time!
+        pauseMenuPanel.SetActive(true);
+    }
+
+    // NEW: Helper method to handle the logic for resuming
+    private void ResumeGame()
+    {
+        Time.timeScale = 1f; // This unfreezes game time back to normal.
+        pauseMenuPanel.SetActive(false);
+    }
+
+    // NEW: This method will be called by the "Resume" button in the pause menu
+    public void OnResumeButtonPressed()
+    {
+        // We can just call the ResumeGame method directly
+        isPaused = false;
+        ResumeGame();
+    }
+
+    // NEW: This method will be called by the "Main Menu" button
+    public void OnMainMenuButtonPressed()
+    {
+        // IMPORTANT: Always reset timeScale before leaving a scene.
+        Time.timeScale = 1f;
+        // Replace "MainMenu" with the actual name of your main menu scene
+        SceneManager.LoadScene("MainMenu");
     }
 
     /// Updates the shot count text on the HUD.
