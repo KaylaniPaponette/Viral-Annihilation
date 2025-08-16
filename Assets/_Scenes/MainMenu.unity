@@ -1283,7 +1283,7 @@ MonoBehaviour:
   shotCount: 0
   maxShots: 3
   defaultBgmIndex: 13
-  baseScore: 10000
+  baseScore: 1000
   levelSequence:
   - sceneName: _Scenes/Level01
     nextLevelName: _Scenes/Level02

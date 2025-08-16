@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private bool isTransitioningToNextLevel = false;
 
     [Header("Scoring")]
-    [SerializeField] public int baseScore = 10000;
+    [SerializeField] public int baseScore = 1;
 
     // Level management
     [System.Serializable]
@@ -227,11 +227,23 @@ public class GameManager : MonoBehaviour
         // NEW: Pause the game when the level is complete
         Time.timeScale = 0f;
 
-        // Scoring Logic
-        float timeMultiplier = Mathf.Max(1, 100 / levelTimer);
+        // ========= OG Scoring Logic (MULTIPLIIER IDEA) =========
+        //float timeMultiplier = Mathf.Max(1, 100 / levelTimer);
+        //int shotsLeft = maxShots - shotCount;
+        //float shotMultiplier = 1 + (shotsLeft * 0.5f);
+        //int finalScore = Mathf.RoundToInt(baseScore * timeMultiplier * shotMultiplier);
+
+        // ========= Alternative Scoring Logic (ADDITIVE IDEA) =========
+        int maxTimeBonus = 5000;
+        int penaltyPerSecond = 100;
         int shotsLeft = maxShots - shotCount;
-        float shotMultiplier = 1 + (shotsLeft * 0.5f);
-        int finalScore = Mathf.RoundToInt(baseScore * timeMultiplier * shotMultiplier);
+                // Calculate a bonus that starts high and decreases over time
+        int timeBonus = Mathf.Max(0, maxTimeBonus - ((int)levelTimer * penaltyPerSecond));
+                // Calculate the shot bonus (can be done differently too)
+        int shotBonus = shotsLeft * 500; // 500 points for every shot left
+
+        // Add everything together
+        int finalScore = baseScore + timeBonus + shotBonus;
         Debug.Log($"LEVEL COMPLETE! Time: {levelTimer:F2}s, Shots: {shotCount}. Final Score: {finalScore}");
 
         // SEND 'finalScore' to LootLocker
@@ -250,7 +262,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("UIManager not found! Loading next level directly.");
+            Debug.Log("UIManager not found! Loading next level directly.");
             ProceedToNextLevel();
         }
     }
@@ -273,7 +285,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Tried to load next level but nextLevel is empty!");
+            Debug.Log("Tried to load next level but nextLevel is empty!");
         }
     }
 
