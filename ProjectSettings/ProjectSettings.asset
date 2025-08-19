@@ -258,7 +258,7 @@ PlayerSettings:
   templateDefaultScene: Assets/Scenes/SampleScene.unity
   useCustomMainManifest: 0
   useCustomLauncherManifest: 0
-  useCustomMainGradleTemplate: 0
+  useCustomMainGradleTemplate: 1
   useCustomLauncherGradleManifest: 0
   useCustomBaseGradleTemplate: 0
   useCustomGradlePropertiesTemplate: 0
@@ -781,7 +781,8 @@ PlayerSettings:
   webGLWebAssemblyBigInt: 0
   webGLCloseOnQuit: 0
   webWasm2023: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: LEVELPLAY_DEPENDENCIES_INSTALLED
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
