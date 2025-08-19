@@ -73,9 +73,10 @@ public class Player : MonoBehaviour
                 GameManager.Instance.IncrementShotCount();
             }
 
-            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-            Debug.Log($"Reloading current scene: {currentScene}");
-            UnityEngine.SceneManagement.SceneManager.LoadScene(currentScene);
+            //string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            //Debug.Log($"Reloading current scene: {currentScene}");
+            //UnityEngine.SceneManagement.SceneManager.LoadScene(currentScene);
+            Destroy(gameObject);
         }
 
         if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)

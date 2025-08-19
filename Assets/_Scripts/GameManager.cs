@@ -55,6 +55,9 @@ public class GameManager : MonoBehaviour
     private float enemyCheckInterval = 0.5f;
     private float enemyCheckTimer = 0;
 
+    // Reference to the UI panel that will offer the ad
+    public AdOfferController adOfferUI;
+
     // Initialize the singleton
     void Awake()
     {
@@ -302,6 +305,8 @@ public class GameManager : MonoBehaviour
         return "";
     }
 
+
+    // --- START OF MODIFIED METHOD FOR REWARD AD---
     public void IncrementShotCount()
     {
         if (isTransitioningToGameOver || isTransitioningToNextLevel) return;
@@ -316,14 +321,89 @@ public class GameManager : MonoBehaviour
 
         if (shotCount >= maxShots)
         {
-            Debug.Log("GAME OVER - Max shots reached");
+            // Instead of going to game over, offer an ad
+            OfferAdForExtraShot();
+        }
+        else
+        {
+            // --- THIS IS THE FIX ---
+            // If the player still has shots left, just reload the scene for their next try.
+            Debug.Log("Player has more shots. Reloading level.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+    // --- ADD THIS NEW METHOD ---
+    // This allows the AdOfferController to register itself when a level loads.
+    public void RegisterAdOfferController(AdOfferController controller)
+    {
+        adOfferUI = controller;
+        Debug.Log("AdOfferController has been registered with the GameManager.");
+    }
+
+    // --- ADD THIS NEW METHOD ---
+    // This cleans up the reference when a level is unloaded to prevent issues.
+    public void UnregisterAdOfferController()
+    {
+        adOfferUI = null;
+    }
+
+    // --- NEW METHOD ---
+    void OfferAdForExtraShot()
+    {
+        Debug.Log("Out of shots! Offering ad for an extra one.");
+        // Pause the game
+        Time.timeScale = 0f;
+        // Show the UI panel
+        if (adOfferUI != null)
+        {
+            adOfferUI.ShowOffer();
+        }
+        else
+        {
+            Debug.LogError("AdOfferUI is not assigned in the GameManager! Going to game over.");
             GoToGameOver();
         }
     }
 
+    // --- NEW METHOD ---
+    public void GrantExtraShot()
+    {
+        Debug.Log("Extra shot granted!");
+        // Reduce the shot count by one, effectively giving them another try
+        shotCount--;
+        PlayerPrefs.SetInt("ShotCount", shotCount);
+        PlayerPrefs.Save();
+
+        // Update the UI
+        if (OnShotCountChanged != null) OnShotCountChanged(shotCount);
+        if (UIManager.Instance != null) UIManager.Instance.UpdateShotCount(shotCount, maxShots);
+
+        // Hide the ad offer UI and unpause
+        if (adOfferUI != null)
+        {
+            adOfferUI.HideOffer();
+        }
+        Time.timeScale = 1f;
+
+        // Reload the current scene to give the player a fresh start with the extra shot
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
     public void GoToGameOver()
     {
         if (isTransitioningToGameOver) return;
+
+        // --- NEW ---
+        // Make sure the game is unpaused before changing scenes
+        Time.timeScale = 1f;
+        if (adOfferUI != null)
+        {
+            adOfferUI.HideOffer();
+        }
+        // --- END NEW ---
+
         isTransitioningToGameOver = true;
         Debug.Log("Going to GameOver scene");
         Invoke("LoadGameOverScene", 0.1f);

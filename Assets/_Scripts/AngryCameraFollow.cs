@@ -50,24 +50,19 @@ public class AngryCameraFollow : MonoBehaviour
     private Vector3 lastMousePosition;
     private float panTimer;
 
-    // NEW VARIABLES for camera view size
     private float cameraHeight;
     private float cameraWidth;
 
-    // --- NEW SINGLETON CODE ---
     public static AngryCameraFollow Instance { get; private set; }
 
     void Awake()
     {
-        // This is the singleton pattern. It ensures there's only one instance.
         if (Instance != null && Instance != this)
         {
-            // If another instance exists, destroy this one.
             Destroy(gameObject);
         }
         else
         {
-            // Otherwise, set this as the one and only instance.
             Instance = this;
         }
     }
@@ -82,7 +77,6 @@ public class AngryCameraFollow : MonoBehaviour
         currentState = CameraState.WaitingAtStart;
         panTimer = 0f;
 
-        // NEW: Calculate camera's view size in world units
         Camera mainCamera = Camera.main;
         cameraHeight = 2f * mainCamera.orthographicSize;
         cameraWidth = cameraHeight * mainCamera.aspect;
@@ -90,7 +84,6 @@ public class AngryCameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        // First, run the state machine to determine where the camera wants to move.
         switch (currentState)
         {
             case CameraState.WaitingAtStart:
@@ -110,16 +103,12 @@ public class AngryCameraFollow : MonoBehaviour
                 break;
         }
 
-        // Second, handle any zoom input from the user.
         HandleZoom();
 
-        // Third, RECALCULATE camera dimensions based on the new, potentially zoomed, size.
-        // This is critical for making sure the boundary clamp works correctly after zooming.
         Camera mainCamera = Camera.main;
         cameraHeight = 2f * mainCamera.orthographicSize;
         cameraWidth = cameraHeight * mainCamera.aspect;
 
-        // Finally, apply the clamping logic to keep the camera within the level boundaries.
         float minX = leftLimit + cameraWidth / 2;
         float maxX = rightLimit - cameraWidth / 2;
         float minY = bottomLimit + cameraHeight / 2;
@@ -143,6 +132,9 @@ public class AngryCameraFollow : MonoBehaviour
 
     void HandleInitialPan()
     {
+        // --- NEW NULL CHECK ---
+        if (player == null || enemyFocusPoint == null) return;
+
         panTimer += Time.deltaTime;
         float panRatio = panTimer / panToPlayerDuration;
         Vector3 startPos = new Vector3(enemyFocusPoint.position.x, enemyFocusPoint.position.y, offset.z);
@@ -157,19 +149,20 @@ public class AngryCameraFollow : MonoBehaviour
 
     void HandleIdleState()
     {
+        // --- NEW NULL CHECK ---
+        if (player == null) return;
+
         Vector3 targetPosition = player.position + offset;
         targetPosition.x += playerScreenOffsetX;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
 
         if (Input.GetMouseButtonDown(0))
         {
-            // NEW CHECK: If the player is being dragged, do nothing.
             if (Player.IsBeingDragged)
             {
                 return;
             }
 
-            // The original logic now only runs if the player is NOT being dragged
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider == null)
             {
@@ -192,16 +185,20 @@ public class AngryCameraFollow : MonoBehaviour
         {
             currentState = CameraState.Idle;
         }
-        // REMOVED clamping from here
     }
 
     void HandleFollowingState()
     {
+        // --- THE MAIN FIX IS HERE ---
+        // If the player has been destroyed, do nothing.
+        if (player == null)
+        {
+            return;
+        }
+
         Vector3 targetPosition = player.position + offset;
         targetPosition.x += playerScreenOffsetX;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
-
-        // REMOVED clamping from here
     }
 
     public void StartFollowing()
@@ -209,34 +206,23 @@ public class AngryCameraFollow : MonoBehaviour
         currentState = CameraState.Following;
     }
 
-    /// Handles the pinch-to-zoom functionality on touch devices.
     void HandleZoom()
     {
-        // We only proceed if there are exactly two touches on the screen.
         if (Input.touchCount == 2)
         {
-            // Get both touches.
             Touch touchZero = Input.GetTouch(0);
             Touch touchOne = Input.GetTouch(1);
 
-            // Find the position of each touch in the previous frame.
             Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
             Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
-            // Calculate the distance between the touches in the previous and current frames.
             float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
             float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
 
-            // The difference in distance is how much the user pinched.
             float difference = currentMagnitude - prevMagnitude;
 
-            // Get a reference to the main camera component.
             Camera mainCamera = Camera.main;
-
-            // Modify the camera's orthographic size based on the pinch amount.
             mainCamera.orthographicSize -= difference * zoomSpeed;
-
-            // Clamp the orthographic size to stay within our min and max zoom levels.
             mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
         }
     }
