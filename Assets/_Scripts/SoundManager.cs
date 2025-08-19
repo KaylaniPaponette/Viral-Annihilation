@@ -40,7 +40,17 @@ public class SoundManager : MonoBehaviour
     {
         if (index >= 0 && index < backgroundMusic.Length)
         {
-            bgmSource.clip = backgroundMusic[index];
+            AudioClip clipToPlay = backgroundMusic[index];
+
+            // NEW: Check if the BGM source is already playing the correct clip.
+            if (bgmSource.isPlaying && bgmSource.clip == clipToPlay)
+            {
+                // If it is, do nothing and let the music continue.
+                return;
+            }
+
+            // Otherwise, play the new clip.
+            bgmSource.clip = clipToPlay;
             bgmSource.loop = true;
             bgmSource.Play();
         }
