@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     Vector3 startingPos;
     private Vector2 directiontoInitialPos;
     public float DirectionalInitialPosForce;
+    private Vector3 lastDragPosition;
 
     private bool nukeThrown;
 
@@ -90,6 +91,9 @@ public class Player : MonoBehaviour
         if (nukeThrown) return;
         IsBeingDragged = true;
 
+        // Store the initial position for the drag calculation
+        lastDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
 
@@ -98,7 +102,7 @@ public class Player : MonoBehaviour
             SoundManager.Instance.PlaySFX(tensionSfxIndex);
         }
     }
-    
+
     private void OnMouseUp()
     {
         if (nukeThrown) return;
@@ -110,10 +114,8 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
         GetComponent<Rigidbody2D>().gravityScale = 1;
         GetComponent<LineRenderer>().enabled = false;
-        if (mainCamera != null)
-        {
-            mainCamera.StartFollowing();
-        }
+
+        AngryCameraFollow.Instance.ResumeFollowingPlayer();
 
         if (SoundManager.Instance != null)
         {
@@ -125,17 +127,22 @@ public class Player : MonoBehaviour
     {
         if (nukeThrown) return;
 
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0;
+        Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        Vector3 direction = mousePosition - startingPos;
+        // We no longer need the if/else. We ALWAYS use scaled movement.
+        Vector3 delta = currentMousePosition - lastDragPosition;
+        // You can adjust the "2f" multiplier if you want the default sensitivity to be higher or lower
+        transform.position += delta * (SettingsManager.DragSensitivity * 2f);
 
-        if (direction.magnitude > maxDragDistance)
+        // Clamp the position to the max drag distance from the start
+        Vector3 directionFromStart = transform.position - startingPos;
+        if (directionFromStart.magnitude > maxDragDistance)
         {
-            direction = direction.normalized * maxDragDistance;
+            transform.position = startingPos + directionFromStart.normalized * maxDragDistance;
         }
 
-        transform.position = startingPos + direction;
+        // Update the last position for the next frame's calculation
+        lastDragPosition = currentMousePosition;
     }
 }
 

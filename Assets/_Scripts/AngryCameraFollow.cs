@@ -8,7 +8,8 @@ public class AngryCameraFollow : MonoBehaviour
         PanningToPlayer,
         Idle,
         Following,
-        PanningLevel
+        PanningLevel,
+        ManualPanIdle
     }
 
     [Header("Targets")]
@@ -49,6 +50,7 @@ public class AngryCameraFollow : MonoBehaviour
     private Vector3 offset;
     private Vector3 lastMousePosition;
     private float panTimer;
+    private Vector3 lastPlayerPosition;
 
     private float cameraHeight;
     private float cameraWidth;
@@ -80,6 +82,8 @@ public class AngryCameraFollow : MonoBehaviour
         Camera mainCamera = Camera.main;
         cameraHeight = 2f * mainCamera.orthographicSize;
         cameraWidth = cameraHeight * mainCamera.aspect;
+        lastPlayerPosition = player.position;
+
     }
 
     void LateUpdate()
@@ -100,6 +104,9 @@ public class AngryCameraFollow : MonoBehaviour
                 break;
             case CameraState.Following:
                 HandleFollowingState();
+                break;
+            case CameraState.ManualPanIdle:
+                HandleManualPanIdle();
                 break;
         }
 
@@ -155,6 +162,7 @@ public class AngryCameraFollow : MonoBehaviour
         Vector3 targetPosition = player.position + offset;
         targetPosition.x += playerScreenOffsetX;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
+        lastPlayerPosition = player.position;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -183,8 +191,36 @@ public class AngryCameraFollow : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            currentState = CameraState.Idle;
+            currentState = CameraState.ManualPanIdle;
         }
+    }
+    void HandleManualPanIdle()
+    {
+        // The camera stays still until the player clicks and drags on an empty space to pan again.
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Don't pan if the player is being dragged (e.g., aiming).
+            if (Player.IsBeingDragged)
+            {
+                return;
+            }
+
+            // Check if the click was on empty space.
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (hit.collider == null)
+            {
+                // If so, store the mouse position and switch to the panning state.
+                lastMousePosition = Input.mousePosition;
+                currentState = CameraState.PanningLevel;
+            }
+        }
+    }
+
+    /// Call this from other scripts (like your weapon script) to make the camera
+    /// snap back to following the player.
+    public void ResumeFollowingPlayer()
+    {
+        currentState = CameraState.Idle;
     }
 
     void HandleFollowingState()
@@ -199,6 +235,8 @@ public class AngryCameraFollow : MonoBehaviour
         Vector3 targetPosition = player.position + offset;
         targetPosition.x += playerScreenOffsetX;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
+        lastPlayerPosition = player.position;
+
     }
 
     public void StartFollowing()
