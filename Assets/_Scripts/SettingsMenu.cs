@@ -10,6 +10,9 @@ public class SettingsMenu : MonoBehaviour
     public Slider musicSlider;
     public Slider sfxSlider;
     public Toggle muteToggle;
+    [Header("Drag Sensitivity")]
+    public Slider sensitivitySlider;
+    public TMPro.TextMeshProUGUI sensitivityValueText; // To display the slider's value
 
     [Header("Audio")]
     public AudioMixer audioMixer;
@@ -63,6 +66,17 @@ public class SettingsMenu : MonoBehaviour
         PlayerPrefs.SetInt("IsMuted", isMuted ? 1 : 0);
     }
 
+    public void OnSensitivitySliderChanged(float value)
+    {
+        // When the slider moves, save the new value using the simplified manager
+        SettingsManager.SaveSettings(value);
+
+        // Update the text to show the current value (e.g., "50%")
+        if (sensitivityValueText != null)
+        {
+            sensitivityValueText.text = (value * 100).ToString("F0") + "%";
+        }
+    }
     public void OpenSettingsPanel()
     {
         settingsPanel.SetActive(true);
@@ -94,5 +108,16 @@ public class SettingsMenu : MonoBehaviour
         {
             audioMixer.SetFloat("MasterVolume", -80f);
         }
+
+        // --- NEW SIMPLIFIED SENSITIVITY LOADING ---
+        // Load drag sensitivity settings from our manager
+        sensitivitySlider.value = SettingsManager.DragSensitivity;
+
+        // THE FIX: This ensures the text is updated as soon as the settings menu is opened.
+        if (sensitivityValueText != null)
+        {
+            sensitivityValueText.text = (sensitivitySlider.value * 100).ToString("F0") + "%";
+        }
     }
+
 }
