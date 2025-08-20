@@ -1,7 +1,8 @@
 //=====GameManager.cs (with Pause Functionality)=====
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Music Settings")]
     public int defaultBgmIndex = 0;
+    [Header("Audio")]
+    public AudioMixer mainAudioMixer;
 
     // Game state
     private bool isTransitioningToGameOver = false;
@@ -33,6 +36,8 @@ public class GameManager : MonoBehaviour
         public string sceneName;
         public string nextLevelName;
         public int bgmIndex;
+        // Add this new line. Defaulting to 'true' is good for your existing levels.
+        public bool isPlayableLevel = true;
     }
 
     public List<LevelData> levelSequence = new List<LevelData>();
@@ -58,7 +63,7 @@ public class GameManager : MonoBehaviour
     // Reference to the UI panel that will offer the ad
     public AdOfferController adOfferUI;
 
-    // Initialize the singleton
+    //Initialize the singleton
     void Awake()
     {
         if (Instance == null)
@@ -66,6 +71,11 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Debug.Log("GameManager initialized");
+
+            // THIS is the only line needed to apply settings at startup.
+            // It tells the new, central manager to do its job.
+            SettingsManager.ApplyAudioSettings(mainAudioMixer);
+
             shotCount = PlayerPrefs.GetInt("ShotCount", 0);
             Debug.Log($"Starting with shot count: {shotCount}");
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -76,6 +86,28 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    //void Awake()
+    //{
+    //    if (Instance == null)
+    //    {
+    //        Instance = this;
+    //        DontDestroyOnLoad(gameObject);
+    //        Debug.Log("GAME MANAGER: Awake() is running.", this.gameObject);
+
+    //        // Tell the SettingsManager to apply the loaded audio settings
+    //        SettingsManager.ApplyAudioSettings(mainAudioMixer);
+
+    //        Debug.Log("GAME MANAGER: Awake() has finished applying settings.", this.gameObject);
+
+    //        shotCount = PlayerPrefs.GetInt("ShotCount", 0);
+    //        SceneManager.sceneLoaded += OnSceneLoaded;
+    //        PrintLevelSequence();
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
     void PrintLevelSequence()
     {
@@ -188,6 +220,28 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
+    //===========OLD VERSION OF UPDATE()===========
+    //void Update()
+    //{
+    //    if (isTransitioningToGameOver || isTransitioningToNextLevel)
+    //        return;
+
+    //    if (isTimerRunning && UIManager.Instance != null)
+    //    {
+    //        levelTimer += Time.deltaTime;
+    //        UIManager.Instance.UpdateTimer(levelTimer);
+    //    }
+
+    //    if (IsLevelInSequence(currentLevel))
+    //    {
+    //        enemyCheckTimer += Time.deltaTime;
+    //        if (enemyCheckTimer >= enemyCheckInterval)
+    //        {
+    //            enemyCheckTimer = 0;
+    //            CheckForEnemies();
+    //        }
+    //    }
+    //}
 
     void Update()
     {
@@ -200,7 +254,12 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.UpdateTimer(levelTimer);
         }
 
-        if (IsLevelInSequence(currentLevel))
+        // --- THIS IS THE FIX ---
+        // First, get the data for the current level
+        LevelData currentLevelData = GetLevelData(currentLevel);
+
+        // Now, only check for enemies if the data exists AND it's marked as a playable level.
+        if (currentLevelData != null && currentLevelData.isPlayableLevel)
         {
             enemyCheckTimer += Time.deltaTime;
             if (enemyCheckTimer >= enemyCheckInterval)
@@ -240,9 +299,9 @@ public class GameManager : MonoBehaviour
         int maxTimeBonus = 5000;
         int penaltyPerSecond = 100;
         int shotsLeft = maxShots - shotCount;
-                // Calculate a bonus that starts high and decreases over time
+        // Calculate a bonus that starts high and decreases over time
         int timeBonus = Mathf.Max(0, maxTimeBonus - ((int)levelTimer * penaltyPerSecond));
-                // Calculate the shot bonus (can be done differently too)
+        // Calculate the shot bonus (can be done differently too)
         int shotBonus = shotsLeft * 500; // 500 points for every shot left
 
         // Add everything together
@@ -436,4 +495,6 @@ public class GameManager : MonoBehaviour
     {
         CompleteLevel();
     }
+
+
 }

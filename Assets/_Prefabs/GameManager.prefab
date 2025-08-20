@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4908223511283935978
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4893874432815158574}
+  - component: {fileID: 1152900857605725655}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4893874432815158574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4908223511283935978}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1389, y: 643.08246, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1152900857605725655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4908223511283935978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 645621251c2cc4747b12f65d5b8aa0fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotCount: 0
+  maxShots: 3
+  defaultBgmIndex: 13
+  mainAudioMixer: {fileID: 24100000, guid: ffa4a637067c86247b09b708b1c22ba5, type: 2}
+  baseScore: 1000
+  levelSequence:
+  - sceneName: _Scenes/Level01
+    nextLevelName: _Scenes/Level02
+    bgmIndex: 1
+  - sceneName: _Scenes/Level02
+    nextLevelName: _Scenes/Level03
+    bgmIndex: 2
+  - sceneName: _Scenes/Level03
+    nextLevelName: _Scenes/Level04
+    bgmIndex: 3
+  - sceneName: _Scenes/Level04
+    nextLevelName: _Scenes/Level05
+    bgmIndex: 4
+  - sceneName: _Scenes/Level05
+    nextLevelName: _Scenes/Level06
+    bgmIndex: 5
+  - sceneName: _Scenes/Level06
+    nextLevelName: _Scenes/Level07
+    bgmIndex: 6
+  - sceneName: _Scenes/Level07
+    nextLevelName: _Scenes/Level08
+    bgmIndex: 7
+  - sceneName: _Scenes/Level08
+    nextLevelName: _Scenes/Level09
+    bgmIndex: 8
+  - sceneName: _Scenes/Level09
+    nextLevelName: _Scenes/Level10
+    bgmIndex: 9
+  - sceneName: _Scenes/Level10
+    nextLevelName: _Scenes/Level11
+    bgmIndex: 10
+  - sceneName: _Scenes/Level11
+    nextLevelName: _Scenes/Level12
+    bgmIndex: 11
+  - sceneName: _Scenes/Level12
+    nextLevelName: _Scenes/Level13
+    bgmIndex: 1
+  - sceneName: _Scenes/Level13
+    nextLevelName: _Scenes/Win
+    bgmIndex: 2
+  - sceneName: _Scenes/MainMenu
+    nextLevelName: 
+    bgmIndex: 0
+  - sceneName: _Scenes/About
+    nextLevelName: 
+    bgmIndex: 9
+  - sceneName: _Scenes/Win
+    nextLevelName: 
+    bgmIndex: 10
+  - sceneName: _Scenes/GameOver
+    nextLevelName: 
+    bgmIndex: 12
+  enemyTag: Enemy
+  debugMode: 1
+  gameOverScenePath: _Scenes/GameOver
+  adOfferUI: {fileID: 0}

@@ -23,6 +23,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenuPanel;
     private bool isPaused = false;
 
+    [Header("Settings Menu")]
+    [SerializeField] private SettingsMenu settingsMenu;
+
     void Awake()
     {
         // Standard Singleton setup
@@ -38,17 +41,22 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        // Ensure the Level Complete screen is hidden when the scene first loads.
+        // Ensure panels are hidden when the scene first loads.
         if (levelCompletePanel != null)
         {
             levelCompletePanel.SetActive(false);
         }
-        // Ensure the Pause Menu is hidden at the start
         if (pauseMenuPanel != null)
         {
             pauseMenuPanel.SetActive(false);
         }
+        // The UIManager is now responsible for hiding the settings menu at the start
+        if (settingsMenu != null)
+        {
+            settingsMenu.gameObject.SetActive(false);
+        }
     }
+
     // NEW: A public method that can be called by a pause button
     public void TogglePauseMenu()
     {
@@ -93,6 +101,24 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1f;
         // Replace "MainMenu" with the actual name of your main menu scene
         SceneManager.LoadScene("MainMenu");
+    }
+    public void OpenSettingsMenu()
+    {
+        // Hide the pause menu
+        pauseMenuPanel.SetActive(false);
+
+        // Show the settings menu
+        settingsMenu.gameObject.SetActive(true);
+        // Call LoadSettings to ensure values are up-to-date
+        settingsMenu.RefreshUI();
+    }
+
+    public void CloseSettingsMenu()
+    {
+        // Hide the settings menu
+        settingsMenu.gameObject.SetActive(false);
+        // Show the pause menu again
+        pauseMenuPanel.SetActive(true);
     }
 
     /// Updates the shot count text on the HUD.

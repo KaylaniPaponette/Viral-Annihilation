@@ -56,7 +56,7 @@ public class TextButtonHandler : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("_Scenes/Level1");
+        SceneManager.LoadScene("_Scenes/Level01");
     }
 
     // I renamed these for clarity to be more general-purpose
