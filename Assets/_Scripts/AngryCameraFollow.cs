@@ -1,3 +1,4 @@
+// ===== AngryCameraFollow.cs (Final Version) =====
 using UnityEngine;
 
 public class AngryCameraFollow : MonoBehaviour
@@ -29,21 +30,14 @@ public class AngryCameraFollow : MonoBehaviour
     public float playerScreenOffsetX = 5f;
 
     [Header("Camera Boundaries")]
-    [Tooltip("The leftmost point the camera's edge can reach.")]
     public float leftLimit = -10f;
-    [Tooltip("The rightmost point the camera's edge can reach.")]
     public float rightLimit = 30f;
-    [Tooltip("The bottommost point the camera's edge can reach.")]
     public float bottomLimit = -5f;
-    [Tooltip("The topmost point the camera's edge can reach.")]
     public float topLimit = 15f;
 
     [Header("Zoom Settings")]
-    [Tooltip("How sensitive the pinch-to-zoom is.")]
     public float zoomSpeed = 0.01f;
-    [Tooltip("The smallest orthographic size (most zoomed in).")]
     public float minZoom = 4f;
-    [Tooltip("The largest orthographic size (most zoomed out).")]
     public float maxZoom = 12f;
 
     private CameraState currentState;
@@ -51,7 +45,6 @@ public class AngryCameraFollow : MonoBehaviour
     private Vector3 lastMousePosition;
     private float panTimer;
     private Vector3 lastPlayerPosition;
-
     private float cameraHeight;
     private float cameraWidth;
 
@@ -68,6 +61,7 @@ public class AngryCameraFollow : MonoBehaviour
             Instance = this;
         }
     }
+
     void Start()
     {
         if (enemyFocusPoint != null)
@@ -82,8 +76,10 @@ public class AngryCameraFollow : MonoBehaviour
         Camera mainCamera = Camera.main;
         cameraHeight = 2f * mainCamera.orthographicSize;
         cameraWidth = cameraHeight * mainCamera.aspect;
-        lastPlayerPosition = player.position;
-
+        if (player != null)
+        {
+            lastPlayerPosition = player.position;
+        }
     }
 
     void LateUpdate()
@@ -111,7 +107,12 @@ public class AngryCameraFollow : MonoBehaviour
         }
 
         HandleZoom();
+        ClampCameraPosition();
+    }
 
+    // Extracted the clamping logic into its own method for clarity
+    void ClampCameraPosition()
+    {
         Camera mainCamera = Camera.main;
         cameraHeight = 2f * mainCamera.orthographicSize;
         cameraWidth = cameraHeight * mainCamera.aspect;
@@ -139,13 +140,12 @@ public class AngryCameraFollow : MonoBehaviour
 
     void HandleInitialPan()
     {
-        // --- NEW NULL CHECK ---
         if (player == null || enemyFocusPoint == null) return;
 
         panTimer += Time.deltaTime;
         float panRatio = panTimer / panToPlayerDuration;
-        Vector3 startPos = new Vector3(enemyFocusPoint.position.x, enemyFocusPoint.position.y, offset.z);
-        Vector3 endPos = new Vector3(player.position.x + playerScreenOffsetX, player.position.y, offset.z);
+        Vector3 startPos = new Vector3(enemyFocusPoint.position.x, enemyFocusPoint.position.y, transform.position.z);
+        Vector3 endPos = new Vector3(player.position.x + playerScreenOffsetX, player.position.y, transform.position.z);
         transform.position = Vector3.Lerp(startPos, endPos, panRatio);
 
         if (panRatio >= 1f)
@@ -156,7 +156,6 @@ public class AngryCameraFollow : MonoBehaviour
 
     void HandleIdleState()
     {
-        // --- NEW NULL CHECK ---
         if (player == null) return;
 
         Vector3 targetPosition = player.position + offset;
@@ -164,13 +163,8 @@ public class AngryCameraFollow : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
         lastPlayerPosition = player.position;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !Player.IsBeingDragged)
         {
-            if (Player.IsBeingDragged)
-            {
-                return;
-            }
-
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider == null)
             {
@@ -194,54 +188,60 @@ public class AngryCameraFollow : MonoBehaviour
             currentState = CameraState.ManualPanIdle;
         }
     }
+
     void HandleManualPanIdle()
     {
-        // The camera stays still until the player clicks and drags on an empty space to pan again.
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !Player.IsBeingDragged)
         {
-            // Don't pan if the player is being dragged (e.g., aiming).
-            if (Player.IsBeingDragged)
-            {
-                return;
-            }
-
-            // Check if the click was on empty space.
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider == null)
             {
-                // If so, store the mouse position and switch to the panning state.
                 lastMousePosition = Input.mousePosition;
                 currentState = CameraState.PanningLevel;
             }
         }
     }
 
-    /// Call this from other scripts (like your weapon script) to make the camera
-    /// snap back to following the player.
     public void ResumeFollowingPlayer()
     {
-        currentState = CameraState.Idle;
+        currentState = CameraState.Following;
+    }
+
+    /// <summary>
+    /// This is called by the Player script when the nuke is thrown.
+    /// </summary>
+    public void StartFollowing()
+    {
+        currentState = CameraState.Following;
     }
 
     void HandleFollowingState()
     {
-        // --- THE MAIN FIX IS HERE ---
-        // If the player has been destroyed, do nothing.
-        if (player == null)
-        {
-            return;
-        }
+        if (player == null) return;
 
         Vector3 targetPosition = player.position + offset;
         targetPosition.x += playerScreenOffsetX;
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
         lastPlayerPosition = player.position;
-
     }
 
-    public void StartFollowing()
+    /// <summary>
+    /// Resets the camera to its initial state, focused on the player's start position.
+    /// Called by the GameManager.
+    /// </summary>
+    public void ResetToStartPosition()
     {
-        currentState = CameraState.Following;
+        currentState = CameraState.Idle;
+        // The player script has already been reset at this point, so 'player.position'
+        // is now the player's starting position.
+        if (player != null)
+        {
+            Vector3 targetPosition = player.position + offset;
+            targetPosition.x += playerScreenOffsetX;
+            // Move instantly, no Lerp needed for a hard reset.
+            transform.position = targetPosition;
+        }
+        Debug.Log("Camera has been reset.");
     }
 
     void HandleZoom()
@@ -250,20 +250,17 @@ public class AngryCameraFollow : MonoBehaviour
         {
             Touch touchZero = Input.GetTouch(0);
             Touch touchOne = Input.GetTouch(1);
-
             Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
             Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
             float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
             float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
-
             float difference = currentMagnitude - prevMagnitude;
-
             Camera mainCamera = Camera.main;
             mainCamera.orthographicSize -= difference * zoomSpeed;
             mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
         }
     }
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
