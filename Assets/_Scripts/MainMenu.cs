@@ -54,6 +54,17 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
+        // Find the persistent GameManager and tell it to reset.
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ResetGameState();
+        }
+        else
+        {
+            Debug.LogError("GameManager not found! Cannot reset state.");
+        }
+
+        // Now, load the first level with a fresh state.
         SceneManager.LoadScene("_Scenes/Level01");
     }
 

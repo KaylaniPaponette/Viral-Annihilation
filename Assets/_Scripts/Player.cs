@@ -1,3 +1,4 @@
+// ===== Player.cs (Final Version) =====
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -5,7 +6,7 @@ public class Player : MonoBehaviour
     public AngryCameraFollow mainCamera;
     private Collider2D _collider;
 
-    Vector3 startingPos;
+    public Vector3 startingPos { get; private set; }
     private Vector2 directiontoInitialPos;
     public float DirectionalInitialPosForce;
     private Vector3 lastDragPosition;
@@ -14,9 +15,8 @@ public class Player : MonoBehaviour
 
     [Tooltip("The maximum distance the player can drag the nuke from its start point.")]
     public float maxDragDistance = 3f;
-
     [Tooltip("Time in seconds before the scene resets after the nuke stops moving.")]
-    public float resetTimeAfterStop = 2f;
+    public float resetTimeAfterStop = 1.2f;
 
     float TimeSinceLaunch;
 
@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
         _collider = GetComponent<Collider2D>();
         startingPos = transform.position;
         IsBeingDragged = false;
+        GetComponent<LineRenderer>().enabled = false;
 
         try
         {
@@ -43,46 +44,41 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnShotCountChanged(int newCount)
-    {
-        // Future logic can go here
-    }
+    private void OnShotCountChanged(int newCount) { }
 
     private void Update()
     {
         if (isResetting) return;
 
-        GetComponent<LineRenderer>().SetPosition(1, startingPos);
-        GetComponent<LineRenderer>().SetPosition(0, transform.position);
-
-        bool isOutOfBounds = false;
-        if (AngryCameraFollow.Instance != null)
+        if (IsBeingDragged)
         {
-            isOutOfBounds = transform.position.x <= AngryCameraFollow.Instance.leftLimit ||
-                            transform.position.x >= AngryCameraFollow.Instance.rightLimit ||
-                            transform.position.y <= AngryCameraFollow.Instance.bottomLimit ||
-                            transform.position.y >= AngryCameraFollow.Instance.topLimit;
+            GetComponent<LineRenderer>().SetPosition(0, transform.position);
+            GetComponent<LineRenderer>().SetPosition(1, startingPos);
         }
 
-        if (nukeThrown && (isOutOfBounds || TimeSinceLaunch >= resetTimeAfterStop))
+        if (nukeThrown)
         {
-            isResetting = true;
-
-            if (GameManager.Instance != null)
-            {
-                Debug.Log("Shot used - informing GameManager");
-                GameManager.Instance.IncrementShotCount();
-            }
-
-            //string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-            //Debug.Log($"Reloading current scene: {currentScene}");
-            //UnityEngine.SceneManagement.SceneManager.LoadScene(currentScene);
-            Destroy(gameObject);
+            HandleBoundaries();
         }
 
-        if (nukeThrown == true && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.1f)
+        if (nukeThrown && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.5f)
         {
             TimeSinceLaunch += Time.deltaTime;
+        }
+
+        if (TimeSinceLaunch >= resetTimeAfterStop)
+        {
+            isResetting = true;
+            if (GameManager.Instance != null)
+            {
+                // Tell the GameManager a shot was used. It will handle the rest.
+                GameManager.Instance.UseShot();
+            }
+            else
+            {
+                Debug.LogWarning("GameManager not found! Resetting player directly as a fallback.");
+                ResetPlayer();
+            }
         }
     }
 
@@ -90,61 +86,100 @@ public class Player : MonoBehaviour
     {
         if (nukeThrown) return;
         IsBeingDragged = true;
-
-        // Store the initial position for the drag calculation
         lastDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
-
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlaySFX(tensionSfxIndex);
-        }
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(tensionSfxIndex);
     }
 
     private void OnMouseUp()
     {
         if (nukeThrown) return;
         IsBeingDragged = false;
-
         nukeThrown = true;
         GetComponent<SpriteRenderer>().color = Color.white;
         directiontoInitialPos = startingPos - transform.position;
         GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
         GetComponent<Rigidbody2D>().gravityScale = 1;
         GetComponent<LineRenderer>().enabled = false;
-
-        AngryCameraFollow.Instance.ResumeFollowingPlayer();
-
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlaySFX(launchSfxIndex);
-        }
+        if (AngryCameraFollow.Instance != null) AngryCameraFollow.Instance.ResumeFollowingPlayer();
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(launchSfxIndex);
     }
 
     private void OnMouseDrag()
     {
         if (nukeThrown) return;
-
         Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // We no longer need the if/else. We ALWAYS use scaled movement.
         Vector3 delta = currentMousePosition - lastDragPosition;
-        // You can adjust the "2f" multiplier if you want the default sensitivity to be higher or lower
         transform.position += delta * (SettingsManager.DragSensitivity * 2f);
-
-        // Clamp the position to the max drag distance from the start
         Vector3 directionFromStart = transform.position - startingPos;
         if (directionFromStart.magnitude > maxDragDistance)
         {
             transform.position = startingPos + directionFromStart.normalized * maxDragDistance;
         }
-
-        // Update the last position for the next frame's calculation
         lastDragPosition = currentMousePosition;
     }
+
+    private void HandleBoundaries()
+    {
+        if (AngryCameraFollow.Instance == null) return;
+        var rb = GetComponent<Rigidbody2D>();
+        if (rb == null) return;
+        Vector3 currentPosition = transform.position;
+        bool boundaryHit = false;
+        if (currentPosition.x <= AngryCameraFollow.Instance.leftLimit)
+        {
+            currentPosition.x = AngryCameraFollow.Instance.leftLimit;
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Updated to use linearVelocity
+            boundaryHit = true;
+        }
+        else if (currentPosition.x >= AngryCameraFollow.Instance.rightLimit)
+        {
+            currentPosition.x = AngryCameraFollow.Instance.rightLimit;
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Updated to use linearVelocity
+            boundaryHit = true;
+        }
+        if (currentPosition.y <= AngryCameraFollow.Instance.bottomLimit)
+        {
+            currentPosition.y = AngryCameraFollow.Instance.bottomLimit;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Updated to use linearVelocity
+            boundaryHit = true;
+        }
+        else if (currentPosition.y >= AngryCameraFollow.Instance.topLimit)
+        {
+            currentPosition.y = AngryCameraFollow.Instance.topLimit;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Updated to use linearVelocity
+            boundaryHit = true;
+        }
+        if (boundaryHit)
+        {
+            transform.position = currentPosition;
+            rb.angularVelocity = 0;
+        }
+    }
+
+    /// <summary>
+    /// Resets the player to its initial state without reloading the scene.
+    /// </summary>
+    public void ResetPlayer()
+    {
+        nukeThrown = false;
+        isResetting = false;
+        TimeSinceLaunch = 0f;
+        var rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 0;
+        rb.linearVelocity = Vector2.zero; // Updated to use linearVelocity
+        rb.angularVelocity = 0;
+        transform.position = startingPos;
+        GetComponent<SpriteRenderer>().color = Color.white;
+        GetComponent<LineRenderer>().enabled = false;
+        Debug.Log("Player has been reset.");
+    }
 }
+
+
+
+
 
 //// ===== Player.cs =====
 //using UnityEngine;

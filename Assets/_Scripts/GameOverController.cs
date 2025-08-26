@@ -1,5 +1,3 @@
-
-
 // ===== GameOverController.cs =====
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,12 +5,12 @@ using UnityEngine.UI;
 
 public class GameOverController : MonoBehaviour
 {
-    // Delay before allowing input
     public float inputDelay = 3f;
+    public float leaderboardRefreshDelay = 2.0f; // Delay to allow server to process score
+
     private float timer = 0f;
     private bool canTransition = false;
 
-    // UI References
     public Button restartButton;
     public Button quitButton;
 
@@ -20,7 +18,6 @@ public class GameOverController : MonoBehaviour
     {
         Debug.Log("GameOver controller started - waiting for delay");
 
-        // Disable buttons initially
         if (restartButton != null)
         {
             restartButton.interactable = false;
@@ -35,11 +32,32 @@ public class GameOverController : MonoBehaviour
             quitButton.onClick.AddListener(QuitGame);
         }
 
-        // Reset any PlayerPrefs shot count
-        PlayerPrefs.SetInt("ShotCount", 0);
-        PlayerPrefs.Save();
-    }
+        SubmitAndRefreshLeaderboard();
 
+        // NOTE: PlayerPrefs reset logic has been moved to the MainMenu/GameManager to ensure it happens
+
+        //// Reset game state for the next run
+        //PlayerPrefs.SetInt("ShotCount", 0);
+        //PlayerPrefs.SetInt("TotalScore", 0); // Reset the total score
+        //PlayerPrefs.Save();
+    }
+    void SubmitAndRefreshLeaderboard()
+    {
+        // Tell the persistent GameManager to submit the final score
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SubmitTotalScore();
+        }
+
+        // Find the leaderboard display in this scene
+        LeaderboardDisplay leaderboard = FindObjectOfType<LeaderboardDisplay>();
+        if (leaderboard != null)
+        {
+            // Tell the leaderboard to fetch scores after a delay.
+            // This gives the server time to process our new score.
+            leaderboard.Invoke("FetchAndDisplayScores", leaderboardRefreshDelay);
+        }
+    }
     void Update()
     {
         timer += Time.deltaTime;
@@ -49,16 +67,14 @@ public class GameOverController : MonoBehaviour
             canTransition = true;
             Debug.Log("GameOver controller now allowing transition");
 
-            // Enable buttons
             if (restartButton != null) restartButton.interactable = true;
             if (quitButton != null) quitButton.interactable = true;
         }
 
-        // Check for key press
-        if (canTransition && Input.anyKeyDown)
-        {
-            RestartGame();
-        }
+        //if (canTransition && Input.anyKeyDown)
+        //{
+        //    RestartGame();
+        //}
     }
 
     public void RestartGame()
@@ -78,10 +94,12 @@ public class GameOverController : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+        Application.Quit();
 #endif
     }
 }
+
+
 
 //-----------------------------------------------------------------------------------------------------------------
 //using UnityEngine;
