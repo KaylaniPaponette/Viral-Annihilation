@@ -746,6 +746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shotCount: 0
   maxShots: 3
+  adOfferChance: 0.592
   defaultBgmIndex: 13
   mainAudioMixer: {fileID: 24100000, guid: ffa4a637067c86247b09b708b1c22ba5, type: 2}
   baseScore: 1000
@@ -821,6 +822,7 @@ MonoBehaviour:
   enemyTag: Enemy
   debugMode: 1
   gameOverScenePath: _Scenes/GameOver
+  winScreenScenePath: _Scenes/Win
   adOfferUI: {fileID: 0}
 --- !u!4 &718297249
 Transform:

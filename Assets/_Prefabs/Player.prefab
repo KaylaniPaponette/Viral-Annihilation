@@ -138,7 +138,7 @@ MonoBehaviour:
   maxDragDistance: 5
   resetTimeAfterStop: 0.8
   tensionSfxIndex: 0
-  launchSfxIndex: 0
+  launchSfxIndex: 1
   trajectoryLineRenderer: {fileID: 2318450793241298995}
   trajectoryForceMultiplier: 6
   trajectoryPoints: 30
@@ -521,7 +521,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fb82580a5442e2a48b23f76643e65150, type: 2}
+  - {fileID: 2100000, guid: da7b463d5fd7dc144986177c5dc38a5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

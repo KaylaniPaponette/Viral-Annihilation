@@ -1579,14 +1579,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 152698161862388524, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 6200000, guid: f4af82cb586f9504fb0f0f0a6518c276, type: 2}
-    - target: {fileID: 161957073949816438, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 883181848606373739, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -13.05
@@ -1632,27 +1624,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
-      propertyPath: maxShots
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1427079186}
-    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
-      propertyPath: failCountText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
-      propertyPath: shotCountText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6000831142756175144, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
-      propertyPath: launchSfxIndex
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 161957073949816438, guid: d505f369f39cfb5468b6c34a94ee791c, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

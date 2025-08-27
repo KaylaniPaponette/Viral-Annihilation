@@ -13,6 +13,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int shotCount = 0;
     public int maxShots = 3;
 
+    [Header("Ad Settings")]
+    [Tooltip("The chance (from 0.0 to 1.0) that an ad will be offered upon running out of shots.")]
+    [Range(0f, 1f)]
+    public float adOfferChance = 0.5f; // 50% chance by default
+
     [Header("Music Settings")]
     public int defaultBgmIndex = 0;
     [Header("Audio")]
@@ -236,7 +241,20 @@ public class GameManager : MonoBehaviour
 
         if (shotCount >= maxShots)
         {
-            OfferAdForExtraShot();
+            // Roll the dice to see if we offer an ad
+            if (Random.value <= adOfferChance)
+            {
+                // Success! Offer an ad.
+                Debug.Log($"Ad offer chance succeeded. Offering ad.");
+                OfferAdForExtraShot();
+            }
+            else
+            {
+                // --- THIS IS THE FIX ---
+                // Failed the chance roll. Go straight to game over.
+                Debug.Log($"Ad offer chance failed. Going to game over.");
+                GoToGameOver();
+            }
         }
         else
         {
