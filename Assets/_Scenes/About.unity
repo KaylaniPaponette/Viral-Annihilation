@@ -331,11 +331,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "The world is facing an extinction level pandemic. Super viruses are starting
-    to take over.\nScientists have created a new weapon, the Anti-Viral-Proximity-Nuke
-    (AVPN)  capable of destroying these viral invaders by simple contact.\nYou are
+    to take over. Scientists have created a new weapon, the Anti-Viral-Proximity-Nuke
+    (AVPN)  capable of destroying these viral invaders by simple contact.You are
     the VIRAL SLAYER \nYOUR MISSION:  Slingshot your AVPN and elminate the viruses,
-    rid the world of this plague!!\nWARNING: AVPNs are in short supply... If you
-    can't clear an area in 3 shots we'll have to hire another VIRAL SLAYER"
+    rid the world of this plague!!\nWARNING: AVPNs have a 5 second timer and are
+    in short supply... If you can't clear an area in 3 shots we'll have to hire another
+    VIRAL SLAYER"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
@@ -575,6 +576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95457d9c1ad7866439b3c4831526d9fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingsMenu: {fileID: 0}
 --- !u!4 &1886030563
 Transform:
   m_ObjectHideFlags: 0

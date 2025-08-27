@@ -136,11 +136,13 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   DirectionalInitialPosForce: 300
   maxDragDistance: 5
-  resetTimeAfterStop: 0.8
+  timeToExplode: 5
+  explosionPrefab: {fileID: 7255472705235179313, guid: 0fa19f98bdea2cd4faa6a49a32b5d1aa, type: 3}
+  postExplosionDelay: 1.5
   tensionSfxIndex: 0
   launchSfxIndex: 1
+  explosionSfxIndex: 5
   trajectoryLineRenderer: {fileID: 2318450793241298995}
-  trajectoryForceMultiplier: 6
   trajectoryPoints: 30
   timeBetweenPoints: 0.1
   trajectoryGravity: 9.81
