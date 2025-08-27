@@ -26,8 +26,14 @@ public class GameManager : MonoBehaviour
     private bool isTransitioningToGameOver = false;
     private bool isTransitioningToNextLevel = false;
 
-    [Header("Scoring")]
-    [SerializeField] public int baseScore = 1;
+    [Header("Scoring (Hybrid)")]
+    [Tooltip("Points awarded just for completing the level.")]
+    [SerializeField] private int levelCompleteBaseScore = 1000;
+    [Tooltip("The base score that gets multiplied by the time bonus.")]
+    [SerializeField] private int baseTimeScore = 2000;
+    [Tooltip("How many points are awarded for each shot remaining.")]
+    [SerializeField] private int bonusPerShotLeft = 500;
+
 
     [System.Serializable]
     public class LevelData
@@ -38,12 +44,22 @@ public class GameManager : MonoBehaviour
         public bool isPlayableLevel = true;
     }
     /// A container to hold all the details of the score calculation for a level.
+    //public struct ScoreData
+    //{
+    //    public float timeTaken;
+    //    public float timeMultiplier;
+    //    public int shotsLeft;
+    //    public float shotMultiplier;
+    //    public int finalScore;
+    //}
     public struct ScoreData
     {
-        public float timeTaken;
+        // --- REPLACE THE OLD VARIABLES WITH THESE ---
+        public int baseScore;
         public float timeMultiplier;
+        public int timeBonusPoints;
         public int shotsLeft;
-        public float shotMultiplier;
+        public int shotsBonusPoints;
         public int finalScore;
     }
 
@@ -169,26 +185,30 @@ public class GameManager : MonoBehaviour
         StopLevelTimer();
         Time.timeScale = 0f;
 
-        // --- MODIFIED SCORING LOGIC ---
-        // 1. Calculate all the score components
-        float timeMultiplier = Mathf.Max(1, 100 / levelTimer);
+        // --- NEW HYBRID SCORING LOGIC ---
+        // 1. Calculate each component
+        float timeMultiplier = (levelTimer > 0) ? Mathf.Max(1, 100 / levelTimer) : 100.0f; // Prevent division by zero
+        int timeBonusPoints = Mathf.RoundToInt(baseTimeScore * timeMultiplier);
+
         int shotsLeft = maxShots - shotCount;
-        float shotMultiplier = 1 + (shotsLeft);
-        int finalScore = Mathf.RoundToInt(baseScore * timeMultiplier * shotMultiplier);
+        int shotsBonusPoints = shotsLeft * bonusPerShotLeft;
+
+        int finalScore = levelCompleteBaseScore + timeBonusPoints + shotsBonusPoints;
 
         // 2. Save the total score
         PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore", 0) + finalScore);
 
-        // 3. Package all the data into our new struct
+        // 3. Package all the data for the UI
         ScoreData scoreDetails = new ScoreData
         {
-            timeTaken = levelTimer,
+            baseScore = levelCompleteBaseScore,
             timeMultiplier = timeMultiplier,
+            timeBonusPoints = timeBonusPoints,
             shotsLeft = shotsLeft,
-            shotMultiplier = shotMultiplier,
+            shotsBonusPoints = shotsBonusPoints,
             finalScore = finalScore
         };
-        // --- END MODIFICATION ---
+        // --- END NEW LOGIC ---
 
         string nextLevel = GetLevelData(currentLevel)?.nextLevelName;
         if (string.IsNullOrEmpty(nextLevel))
@@ -200,7 +220,6 @@ public class GameManager : MonoBehaviour
             isTransitioningToNextLevel = true;
             if (UIManager.Instance != null)
             {
-                // 4. Send the entire package to the UIManager
                 UIManager.Instance.ShowLevelCompleteScreen(scoreDetails);
             }
             else
@@ -209,6 +228,54 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    //void CompleteLevel()
+    //{
+    //    if (isTransitioningToNextLevel) return;
+
+    //    StopLevelTimer();
+    //    Time.timeScale = 0f;
+
+    //    // --- MODIFIED SCORING LOGIC ---
+    //    // 1. Calculate all the score components
+    //    float timeMultiplier = Mathf.Max(1, 100 / levelTimer);
+    //    int shotsLeft = maxShots - shotCount;
+    //    float shotMultiplier = 1 + (shotsLeft);
+    //    int finalScore = Mathf.RoundToInt(baseScore * timeMultiplier * shotMultiplier);
+
+    //    // 2. Save the total score
+    //    PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore", 0) + finalScore);
+
+    //    // 3. Package all the data into our new struct
+    //    ScoreData scoreDetails = new ScoreData
+    //    {
+    //        timeTaken = levelTimer,
+    //        timeMultiplier = timeMultiplier,
+    //        shotsLeft = shotsLeft,
+    //        shotMultiplier = shotMultiplier,
+    //        finalScore = finalScore
+    //    };
+    //    // --- END MODIFICATION ---
+
+    //    string nextLevel = GetLevelData(currentLevel)?.nextLevelName;
+    //    if (string.IsNullOrEmpty(nextLevel))
+    //    {
+    //        GoToWinScreen();
+    //    }
+    //    else
+    //    {
+    //        isTransitioningToNextLevel = true;
+    //        if (UIManager.Instance != null)
+    //        {
+    //            // 4. Send the entire package to the UIManager
+    //            UIManager.Instance.ShowLevelCompleteScreen(scoreDetails);
+    //        }
+    //        else
+    //        {
+    //            ProceedToNextLevel();
+    //        }
+    //    }
+    //}
 
 
     public void ProceedToNextLevel()
