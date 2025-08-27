@@ -1,11 +1,11 @@
-// ===== UIManager.cs =====
+// ===== UIManager.cs (Final Version) =====
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro; 
+using TMPro;
+using System.Collections; // Required for Coroutines
 
 public class UIManager : MonoBehaviour
 {
-    // A Singleton instance makes it easy for other scripts to access this UIManager
     public static UIManager Instance { get; private set; }
 
     [Header("In-Game HUD Elements")]
@@ -13,12 +13,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
 
     [Header("Level Complete Screen")]
-    // A reference to the parent panel of the level complete screen
     [SerializeField] private GameObject levelCompletePanel;
-    // A reference to the text that will display the final score
+    // --- NEW UI REFERENCES FOR SCORE TALLY ---
+    [SerializeField] private TextMeshProUGUI timeBonusText;
+    [SerializeField] private TextMeshProUGUI shotsBonusText;
     [SerializeField] private TextMeshProUGUI finalScoreText;
+    [SerializeField] private UnityEngine.UI.Button continueButton; // Reference to the continue button
 
-    // NEW
     [Header("Pause Menu")]
     [SerializeField] private GameObject pauseMenuPanel;
     private bool isPaused = false;
@@ -28,7 +29,6 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        // Standard Singleton setup
         if (Instance == null)
         {
             Instance = this;
@@ -41,88 +41,68 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        // Ensure panels are hidden when the scene first loads.
-        if (levelCompletePanel != null)
+        if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
+        if (pauseMenuPanel != null) pauseMenuPanel.SetActive(false);
+        if (settingsMenu != null) settingsMenu.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Activates the Level Complete screen and starts the score tally animation.
+    /// </summary>
+    /// <param name="scoreData">The package of score details from the GameManager.</param>
+    public void ShowLevelCompleteScreen(GameManager.ScoreData scoreData)
+    {
+        if (levelCompletePanel == null)
         {
-            levelCompletePanel.SetActive(false);
+            Debug.LogError("Level Complete UI elements are not assigned in the UIManager!");
+            return;
         }
-        if (pauseMenuPanel != null)
-        {
-            pauseMenuPanel.SetActive(false);
-        }
-        // The UIManager is now responsible for hiding the settings menu at the start
-        if (settingsMenu != null)
-        {
-            settingsMenu.gameObject.SetActive(false);
-        }
+
+        // Start the animation instead of just setting the text
+        StartCoroutine(AnimateScoreTally(scoreData));
     }
 
-    // NEW: A public method that can be called by a pause button
-    public void TogglePauseMenu()
+    /// <summary>
+    /// Animates the score tally on the level complete screen.
+    /// </summary>
+    private IEnumerator AnimateScoreTally(GameManager.ScoreData data)
     {
-        isPaused = !isPaused; // Invert the paused state
+        // 1. Prepare the screen
+        levelCompletePanel.SetActive(true);
+        if (continueButton != null) continueButton.gameObject.SetActive(false);
 
-        if (isPaused)
-        {
-            PauseGame();
-        }
-        else
-        {
-            ResumeGame();
-        }
+        // Clear previous text
+        timeBonusText.text = "";
+        shotsBonusText.text = "";
+        finalScoreText.text = "";
+
+        // Using WaitForSecondsRealtime is important because Time.timeScale is 0
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        // 2. Show Time Bonus
+        timeBonusText.text = $"Time Bonus: {data.timeTaken:F1}s  x {data.timeMultiplier:F1}";
+        // Using "F1" formats the float to one decimal place
+        // TODO: Play a sound effect here!
+        // You can play a sound effect here! e.g., SoundManager.Instance.PlaySFX(tallySoundIndex);
+
+
+        yield return new WaitForSecondsRealtime(1.0f);
+
+        // 3. Show Shots Bonus
+        shotsBonusText.text = $"Shots Left Bonus: {data.shotsLeft}  x {data.shotMultiplier:F1}";
+        // TODO: Play another sound effect
+
+        yield return new WaitForSecondsRealtime(1.0f);
+
+        // 4. Show the Final Score
+        finalScoreText.text = $"Final Score: {data.finalScore:N0}";
+        // TODO: Play a final, bigger sound effect!
+
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        // 5. Show the continue button
+        if (continueButton != null) continueButton.gameObject.SetActive(true);
     }
-
-    // NEW: Helper method to handle the logic for pausing
-    private void PauseGame()
-    {
-        Time.timeScale = 0f; // This freezes game time!
-        pauseMenuPanel.SetActive(true);
-    }
-
-    // NEW: Helper method to handle the logic for resuming
-    private void ResumeGame()
-    {
-        Time.timeScale = 1f; // This unfreezes game time back to normal.
-        pauseMenuPanel.SetActive(false);
-    }
-
-    // NEW: This method will be called by the "Resume" button in the pause menu
-    public void OnResumeButtonPressed()
-    {
-        // We can just call the ResumeGame method directly
-        isPaused = false;
-        ResumeGame();
-    }
-
-    // NEW: This method will be called by the "Main Menu" button
-    public void OnMainMenuButtonPressed()
-    {
-        // IMPORTANT: Always reset timeScale before leaving a scene.
-        Time.timeScale = 1f;
-        // Replace "MainMenu" with the actual name of your main menu scene
-        SceneManager.LoadScene("MainMenu");
-    }
-    public void OpenSettingsMenu()
-    {
-        // Hide the pause menu
-        pauseMenuPanel.SetActive(false);
-
-        // Show the settings menu
-        settingsMenu.gameObject.SetActive(true);
-        // Call LoadSettings to ensure values are up-to-date
-        settingsMenu.RefreshUI();
-    }
-
-    public void CloseSettingsMenu()
-    {
-        // Hide the settings menu
-        settingsMenu.gameObject.SetActive(false);
-        // Show the pause menu again
-        pauseMenuPanel.SetActive(true);
-    }
-
-    /// Updates the shot count text on the HUD.
-    /// Called by the GameManager whenever the shot count changes.
 
     public void UpdateShotCount(int currentShots, int maxShots)
     {
@@ -133,52 +113,64 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    /// Updates the timer text on the HUD.
-    /// Called by the GameManager every frame while the timer is running.
-
     public void UpdateTimer(float timeInSeconds)
     {
         if (timerText != null)
         {
-            // Calculate minutes and seconds from the total time
             int minutes = Mathf.FloorToInt(timeInSeconds / 60F);
             int seconds = Mathf.FloorToInt(timeInSeconds % 60F);
-
-            // Format the string to always show two digits for minutes and seconds (e.g., 01:05)
-            timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
+            timerText.text = $"Time: {minutes:00}:{seconds:00}";
         }
     }
 
-    /// <summary>
-    /// Activates the Level Complete screen and displays the final score.
-    /// Called by the GameManager when all enemies are defeated.
-    /// </summary>
-    /// <param name="score">The final calculated score for the level.</param>
-    public void ShowLevelCompleteScreen(int score)
-    {
-        // Check if the UI elements have been assigned in the Inspector
-        if (levelCompletePanel == null || finalScoreText == null)
-        {
-            Debug.LogError("Level Complete UI elements are not assigned in the UIManager!");
-            return;
-        }
-
-        // Activate the parent panel to show the screen
-        levelCompletePanel.SetActive(true);
-        // Set the score text, using N0 for formatting the number with commas for readability (e.g., 12,345)
-        finalScoreText.text = "Score: " + score.ToString("N0");
-    }
-    /// <summary>
-    /// This public method is called by the "Continue" button's OnClick event.
-    /// It acts as a bridge to the GameManager singleton.
-    /// </summary>
     public void OnContinueButtonPressed()
     {
-        // Find the active GameManager instance and tell it to proceed.
         if (GameManager.Instance != null)
         {
             GameManager.Instance.ProceedToNextLevel();
         }
     }
 
+    // --- PAUSE & SETTINGS MENU LOGIC ---
+
+    public void TogglePauseMenu()
+    {
+        isPaused = !isPaused;
+        if (isPaused)
+        {
+            Time.timeScale = 0f;
+            pauseMenuPanel.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            pauseMenuPanel.SetActive(false);
+        }
+    }
+
+    public void OnResumeButtonPressed()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;
+        pauseMenuPanel.SetActive(false);
+    }
+
+    public void OnMainMenuButtonPressed()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("_Scenes/MainMenu"); // Make sure this scene name is correct
+    }
+
+    public void OpenSettingsMenu()
+    {
+        pauseMenuPanel.SetActive(false);
+        settingsMenu.gameObject.SetActive(true);
+        settingsMenu.RefreshUI();
+    }
+
+    public void CloseSettingsMenu()
+    {
+        settingsMenu.gameObject.SetActive(false);
+        pauseMenuPanel.SetActive(true);
+    }
 }
