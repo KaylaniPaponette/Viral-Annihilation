@@ -58,13 +58,14 @@ public static class SettingsManager
         }
         else
         {
-            // If not muted, apply the master volume
-            mixer.SetFloat("MasterVolume", Mathf.Log10(MasterVolume) * 20);
+            // Use Mathf.Max to prevent the volume from being 0, which causes Log10 to return -Infinity.
+            // A value of 0.0001f is a safe lower limit that equates to -80dB.
+            mixer.SetFloat("MasterVolume", Mathf.Log10(Mathf.Max(MasterVolume, 0.0001f)) * 20);
         }
 
-        // Apply individual music and SFX volumes
-        mixer.SetFloat("MusicVolume", Mathf.Log10(MusicVolume) * 20);
-        mixer.SetFloat("SFXVolume", Mathf.Log10(SFXVolume) * 20);
+        // Apply the same logic for Music and SFX volumes, regardless of the master mute state.
+        mixer.SetFloat("MusicVolume", Mathf.Log10(Mathf.Max(MusicVolume, 0.0001f)) * 20);
+        mixer.SetFloat("SFXVolume", Mathf.Log10(Mathf.Max(SFXVolume, 0.0001f)) * 20);
 
         Debug.Log("SettingsManager: Audio settings applied to mixer.");
     }

@@ -285,7 +285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5644960448545564863
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1186,8 +1186,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280915093
-  m_fontColor: {r: 0.58431375, g: 0.58151776, b: 0.1607843, a: 1}
+    rgba: 4278451711
+  m_fontColor: {r: 1, g: 0.99086297, b: 0.013207495, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1322,8 +1322,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281242921
-  m_fontColor: {r: 0.16222852, g: 0.5849056, b: 0.17861006, a: 1}
+    rgba: 4294941952
+  m_fontColor: {r: 0, g: 0.6156863, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1513,6 +1513,8 @@ MonoBehaviour:
   shotsBonusText: {fileID: 1716443834167459969}
   finalScoreText: {fileID: 5849225847329103330}
   continueButton: {fileID: 5484463403743569792}
+  tallySoundIndex: 7
+  finalScoreSoundIndex: 6
   pauseMenuPanel: {fileID: 3821586317654385345}
   settingsMenu: {fileID: 174936698770039019}
 --- !u!114 &6219252519208903559
@@ -1604,8 +1606,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281242921
-  m_fontColor: {r: 0.16222852, g: 0.5849056, b: 0.17861006, a: 1}
+    rgba: 4294941952
+  m_fontColor: {r: 0, g: 0.6156863, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1872,8 +1874,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294925312
-  m_fontColor: {r: 0, g: 0.3614607, b: 1, a: 1}
+    rgba: 4278255371
+  m_fontColor: {r: 0.043987036, g: 1, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

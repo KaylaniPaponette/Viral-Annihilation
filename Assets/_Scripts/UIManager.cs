@@ -20,6 +20,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI finalScoreText;
     [SerializeField] private UnityEngine.UI.Button continueButton; // Reference to the continue button
 
+    [Header("Sound Effect Indexes")]
+    [Tooltip("The sound that plays for each bonus item tally.")]
+    public int tallySoundIndex;
+    [Tooltip("The sound that plays when the final score is revealed.")]
+    public int finalScoreSoundIndex;
+
     [Header("Pause Menu")]
     [SerializeField] private GameObject pauseMenuPanel;
     private bool isPaused = false;
@@ -46,9 +52,7 @@ public class UIManager : MonoBehaviour
         if (settingsMenu != null) settingsMenu.gameObject.SetActive(false);
     }
 
-    /// <summary>
     /// Activates the Level Complete screen and starts the score tally animation.
-    /// </summary>
     /// <param name="scoreData">The package of score details from the GameManager.</param>
     public void ShowLevelCompleteScreen(GameManager.ScoreData scoreData)
     {
@@ -62,9 +66,7 @@ public class UIManager : MonoBehaviour
         StartCoroutine(AnimateScoreTally(scoreData));
     }
 
-    /// <summary>
     /// Animates the score tally on the level complete screen.
-    /// </summary>
     private IEnumerator AnimateScoreTally(GameManager.ScoreData data)
     {
         // 1. Prepare the screen
@@ -76,27 +78,35 @@ public class UIManager : MonoBehaviour
         shotsBonusText.text = "";
         finalScoreText.text = "";
 
-        // Using WaitForSecondsRealtime is important because Time.timeScale is 0
         yield return new WaitForSecondsRealtime(0.5f);
 
         // 2. Show Time Bonus
         timeBonusText.text = $"Time Bonus: {data.timeTaken:F1}s  x {data.timeMultiplier:F1}";
-        // Using "F1" formats the float to one decimal place
-        // TODO: Play a sound effect here!
-        // You can play a sound effect here! e.g., SoundManager.Instance.PlaySFX(tallySoundIndex);
-
+        // --- Play the tally sound ---
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(tallySoundIndex);
+        }
 
         yield return new WaitForSecondsRealtime(1.0f);
 
         // 3. Show Shots Bonus
         shotsBonusText.text = $"Shots Left Bonus: {data.shotsLeft}  x {data.shotMultiplier:F1}";
-        // TODO: Play another sound effect
+        // --- Play the tally sound again ---
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(tallySoundIndex);
+        }
 
         yield return new WaitForSecondsRealtime(1.0f);
 
         // 4. Show the Final Score
         finalScoreText.text = $"Final Score: {data.finalScore:N0}";
-        // TODO: Play a final, bigger sound effect!
+        // --- Play the final, bigger sound effect! ---
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(finalScoreSoundIndex);
+        }
 
         yield return new WaitForSecondsRealtime(0.5f);
 
