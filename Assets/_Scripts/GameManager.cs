@@ -1,4 +1,4 @@
-// ===== GameManager.cs (Final Version) =====
+// ===== GameManager.cs (Updated) =====
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -31,6 +31,15 @@ public class GameManager : MonoBehaviour
         public string nextLevelName;
         public int bgmIndex;
         public bool isPlayableLevel = true;
+    }
+    /// A container to hold all the details of the score calculation for a level.
+    public struct ScoreData
+    {
+        public float timeTaken;
+        public float timeMultiplier;
+        public int shotsLeft;
+        public float shotMultiplier;
+        public int finalScore;
     }
 
     public List<LevelData> levelSequence = new List<LevelData>();
@@ -66,7 +75,6 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
         isTransitioningToGameOver = false;
         isTransitioningToNextLevel = false;
 
@@ -74,13 +82,14 @@ public class GameManager : MonoBehaviour
         LevelData currentLevelData = GetLevelData(newSceneName);
         bool isGameplayLevel = currentLevelData != null && currentLevelData.isPlayableLevel;
 
-        //isTransitioningToGameOver = false;
-        //isTransitioningToNextLevel = false;
-
         if (isGameplayLevel)
         {
             if (newSceneName != this.currentLevel) levelTimer = 0f;
+
+            // --- MODIFIED ---
+            // False so thgat the timer will now wait for the player to start aiming.
             isTimerRunning = true;
+
             if (UIManager.Instance != null) UIManager.Instance.UpdateShotCount(shotCount, maxShots);
             enemyCheckTimer = 0;
         }
@@ -98,6 +107,24 @@ public class GameManager : MonoBehaviour
             SoundManager.Instance.PlayBGM(defaultBgmIndex);
         }
         this.currentLevel = newSceneName;
+    }
+
+    // --- NEW ---
+    /// <summary>
+    /// Public method to start the level timer. Called by the Player script.
+    /// </summary>
+    public void StartLevelTimer()
+    {
+        isTimerRunning = true;
+    }
+
+    // --- NEW ---
+    /// <summary>
+    /// Public method to stop the level timer. Called by the Player script.
+    /// </summary>
+    public void StopLevelTimer()
+    {
+        isTimerRunning = false;
     }
 
     LevelData GetLevelData(string sceneName)
@@ -134,31 +161,42 @@ public class GameManager : MonoBehaviour
     {
         if (isTransitioningToNextLevel) return;
 
-        isTimerRunning = false;
+        StopLevelTimer();
         Time.timeScale = 0f;
 
-        // Calculate score
+        // --- MODIFIED SCORING LOGIC ---
+        // 1. Calculate all the score components
         float timeMultiplier = Mathf.Max(1, 100 / levelTimer);
         int shotsLeft = maxShots - shotCount;
-        float shotMultiplier = 1 + (shotsLeft * 0.5f);
+        float shotMultiplier = 1 + (shotsLeft);
         int finalScore = Mathf.RoundToInt(baseScore * timeMultiplier * shotMultiplier);
+
+        // 2. Save the total score
         PlayerPrefs.SetInt("TotalScore", PlayerPrefs.GetInt("TotalScore", 0) + finalScore);
 
-        // Check if there is a next level
+        // 3. Package all the data into our new struct
+        ScoreData scoreDetails = new ScoreData
+        {
+            timeTaken = levelTimer,
+            timeMultiplier = timeMultiplier,
+            shotsLeft = shotsLeft,
+            shotMultiplier = shotMultiplier,
+            finalScore = finalScore
+        };
+        // --- END MODIFICATION ---
+
         string nextLevel = GetLevelData(currentLevel)?.nextLevelName;
         if (string.IsNullOrEmpty(nextLevel))
         {
-            // This is the FINAL level. Go straight to the win screen.
-            Debug.Log("Final level completed! Going to Win Screen.");
             GoToWinScreen();
         }
         else
         {
-            // Not the final level. Show the regular level complete screen.
             isTransitioningToNextLevel = true;
             if (UIManager.Instance != null)
             {
-                UIManager.Instance.ShowLevelCompleteScreen(finalScore);
+                // 4. Send the entire package to the UIManager
+                UIManager.Instance.ShowLevelCompleteScreen(scoreDetails);
             }
             else
             {
@@ -230,7 +268,6 @@ public class GameManager : MonoBehaviour
     void ResetLevelState()
     {
         Debug.Log("GameManager is resetting the level state.");
-        // Replace the obsolete method call with the recommended one
         Player player = Object.FindFirstObjectByType<Player>();
         if (player != null) player.ResetPlayer();
         else Debug.LogError("Could not find Player to reset!");
@@ -238,6 +275,9 @@ public class GameManager : MonoBehaviour
         AngryCameraFollow cameraFollow = Object.FindFirstObjectByType<AngryCameraFollow>();
         if (cameraFollow != null) cameraFollow.ResetToStartPosition();
         else Debug.LogError("Could not find AngryCameraFollow to reset!");
+
+        // --- CHANGE 2: Resume the timer when the level state is reset. ---
+        StartLevelTimer();
 
         Time.timeScale = 1f;
     }
@@ -256,7 +296,6 @@ public class GameManager : MonoBehaviour
     {
         if (isTransitioningToGameOver) return;
         isTransitioningToGameOver = true;
-        //SubmitTotalScore();
         Time.timeScale = 1f;
         if (adOfferUI != null) adOfferUI.HideOffer();
         SceneManager.LoadScene(gameOverScenePath);
@@ -266,7 +305,6 @@ public class GameManager : MonoBehaviour
     {
         if (isTransitioningToNextLevel || isTransitioningToGameOver) return;
         isTransitioningToNextLevel = true;
-        //SubmitTotalScore();
         Time.timeScale = 1f;
         SceneManager.LoadScene(winScreenScenePath);
     }
@@ -281,7 +319,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("Resetting Game State: Shot Count and Total Score.");
         shotCount = 0;
 
-        // Also reset the saved data to be safe.
         PlayerPrefs.SetInt("ShotCount", 0);
         PlayerPrefs.SetInt("TotalScore", 0);
         PlayerPrefs.Save();
@@ -293,7 +330,6 @@ public class GameManager : MonoBehaviour
         CompleteLevel();
     }
 }
-
 
 
 

@@ -1,4 +1,4 @@
-// ===== Player.cs (Final Version) =====
+// ===== Player.cs (Updated) =====
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -71,7 +71,6 @@ public class Player : MonoBehaviour
             isResetting = true;
             if (GameManager.Instance != null)
             {
-                // Tell the GameManager a shot was used. It will handle the rest.
                 GameManager.Instance.UseShot();
             }
             else
@@ -90,6 +89,13 @@ public class Player : MonoBehaviour
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(tensionSfxIndex);
+
+        //// --- NEW ---
+        //// Tell the GameManager to start the timer when we start dragging.
+        //if (GameManager.Instance != null)
+        //{
+        //    GameManager.Instance.StartLevelTimer();
+        //}
     }
 
     private void OnMouseUp()
@@ -104,6 +110,13 @@ public class Player : MonoBehaviour
         GetComponent<LineRenderer>().enabled = false;
         if (AngryCameraFollow.Instance != null) AngryCameraFollow.Instance.ResumeFollowingPlayer();
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(launchSfxIndex);
+
+        // --- NEW ---
+        // Tell the GameManager to stop the timer when we release.
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.StopLevelTimer();
+        }
     }
 
     private void OnMouseDrag()
@@ -130,25 +143,25 @@ public class Player : MonoBehaviour
         if (currentPosition.x <= AngryCameraFollow.Instance.leftLimit)
         {
             currentPosition.x = AngryCameraFollow.Instance.leftLimit;
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Updated to use linearVelocity
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             boundaryHit = true;
         }
         else if (currentPosition.x >= AngryCameraFollow.Instance.rightLimit)
         {
             currentPosition.x = AngryCameraFollow.Instance.rightLimit;
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); // Updated to use linearVelocity
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             boundaryHit = true;
         }
         if (currentPosition.y <= AngryCameraFollow.Instance.bottomLimit)
         {
             currentPosition.y = AngryCameraFollow.Instance.bottomLimit;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Updated to use linearVelocity
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
             boundaryHit = true;
         }
         else if (currentPosition.y >= AngryCameraFollow.Instance.topLimit)
         {
             currentPosition.y = AngryCameraFollow.Instance.topLimit;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // Updated to use linearVelocity
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
             boundaryHit = true;
         }
         if (boundaryHit)
@@ -158,9 +171,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Resets the player to its initial state without reloading the scene.
-    /// </summary>
     public void ResetPlayer()
     {
         nukeThrown = false;
@@ -168,7 +178,7 @@ public class Player : MonoBehaviour
         TimeSinceLaunch = 0f;
         var rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
-        rb.linearVelocity = Vector2.zero; // Updated to use linearVelocity
+        rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
         transform.position = startingPos;
         GetComponent<SpriteRenderer>().color = Color.white;
