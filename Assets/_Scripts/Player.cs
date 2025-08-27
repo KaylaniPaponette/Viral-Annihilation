@@ -27,13 +27,34 @@ public class Player : MonoBehaviour
     private bool isResetting = false;
     public static bool IsBeingDragged { get; private set; }
 
+    // --- NEW TRAJECTORY VARIABLES ---
+    [Header("Trajectory")]
+    [Tooltip("The LineRenderer component used to draw the projectile's path.")]
+    public LineRenderer trajectoryLineRenderer;
+
+    [Header("Trajectory Settings")]
+    [Tooltip("A separate, smaller force value used ONLY for drawing the trajectory line accurately.")]
+    public float trajectoryForceMultiplier = 20f; // <--- ADD THIS LINE    [Tooltip("The number of points to calculate for the trajectory line.")]
+    [SerializeField] private int trajectoryPoints = 30;
+    [Tooltip("The time interval between each calculated trajectory point.")]
+    [SerializeField] private float timeBetweenPoints = 0.1f;
+    [Tooltip("The gravity value to use for trajectory prediction. Should be a positive number.")]
+    public float trajectoryGravity = 9.81f;
+    //[Tooltip("A multiplier to exaggerate the predicted arc for visual feedback.")]
+    //public float trajectoryGravityMultiplier = 1f;
+
     private void Awake()
     {
         _collider = GetComponent<Collider2D>();
         startingPos = transform.position;
         IsBeingDragged = false;
         GetComponent<LineRenderer>().enabled = false;
-
+        // --- NEW ---
+        // Ensure the trajectory line is hidden at the start
+        if (trajectoryLineRenderer != null)
+        {
+            trajectoryLineRenderer.enabled = false;
+        }
         try
         {
             GameManager.OnShotCountChanged += OnShotCountChanged;
@@ -90,6 +111,11 @@ public class Player : MonoBehaviour
         GetComponent<LineRenderer>().enabled = true;
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(tensionSfxIndex);
 
+        // Show the trajectory line
+        if (trajectoryLineRenderer != null)
+        {
+            trajectoryLineRenderer.enabled = true;
+        }
         //// --- NEW ---
         //// Tell the GameManager to start the timer when we start dragging.
         //if (GameManager.Instance != null)
@@ -108,6 +134,14 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
         GetComponent<Rigidbody2D>().gravityScale = 1;
         GetComponent<LineRenderer>().enabled = false;
+
+        // --- NEW ---
+        // Hide the trajectory line
+        if (trajectoryLineRenderer != null)
+        {
+            trajectoryLineRenderer.enabled = false;
+        }
+
         if (AngryCameraFollow.Instance != null) AngryCameraFollow.Instance.ResumeFollowingPlayer();
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(launchSfxIndex);
 
@@ -131,8 +165,43 @@ public class Player : MonoBehaviour
             transform.position = startingPos + directionFromStart.normalized * maxDragDistance;
         }
         lastDragPosition = currentMousePosition;
+
+        // --- NEW ---
+        // Update the trajectory line's path
+        DrawTrajectory();
     }
 
+    /// Calculates and draws the predicted path of the projectile.
+    private void DrawTrajectory()
+    {
+        if (trajectoryLineRenderer == null) return;
+        var rb = GetComponent<Rigidbody2D>();
+        // --- THIS IS THE CRITICAL CHANGE ---
+        // We now use the NEW 'trajectoryForceMultiplier' for the visual prediction ONLY.
+        // The actual launch force remains separate and is used in OnMouseUp.
+        Vector2 launchVelocity = (startingPos - transform.position) * trajectoryForceMultiplier / rb.mass;
+        // --- END OF CHANGE ---
+
+        // Set up the line renderer
+        trajectoryLineRenderer.positionCount = trajectoryPoints;
+        Vector3[] points = new Vector3[trajectoryPoints];
+        Vector2 startPos = transform.position;
+
+        for (int i = 0; i < trajectoryPoints; i++)
+        {
+            float t = i * timeBetweenPoints;
+
+            // Calculate the X and Y positions separately
+            Vector2 point = new Vector2(
+                startPos.x + launchVelocity.x * t,
+                startPos.y + launchVelocity.y * t - 0.5f * trajectoryGravity * t * t
+            );
+
+            points[i] = point;
+        }
+
+        trajectoryLineRenderer.SetPositions(points);
+    }
     private void HandleBoundaries()
     {
         if (AngryCameraFollow.Instance == null) return;
