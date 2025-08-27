@@ -12,36 +12,32 @@ public class Player : MonoBehaviour
     private Vector3 lastDragPosition;
 
     private bool nukeThrown;
+    public static bool IsBeingDragged { get; private set; }
 
     [Tooltip("The maximum distance the player can drag the nuke from its start point.")]
     public float maxDragDistance = 3f;
     [Tooltip("Time in seconds before the scene resets after the nuke stops moving.")]
     public float resetTimeAfterStop = 1.2f;
 
+    // Tracks time since the nuke was thrown to determine when to reset.
     float TimeSinceLaunch;
+    private bool isResetting = false;
 
     [Header("Sound Effect Indexes")]
     public int tensionSfxIndex;
     public int launchSfxIndex;
 
-    private bool isResetting = false;
-    public static bool IsBeingDragged { get; private set; }
-
-    // --- NEW TRAJECTORY VARIABLES ---
     [Header("Trajectory")]
     [Tooltip("The LineRenderer component used to draw the projectile's path.")]
     public LineRenderer trajectoryLineRenderer;
 
     [Header("Trajectory Settings")]
-    [Tooltip("A separate, smaller force value used ONLY for drawing the trajectory line accurately.")]
-    public float trajectoryForceMultiplier = 20f; // <--- ADD THIS LINE    [Tooltip("The number of points to calculate for the trajectory line.")]
+    [Tooltip("The number of points to calculate for the trajectory line.")]
     [SerializeField] private int trajectoryPoints = 30;
     [Tooltip("The time interval between each calculated trajectory point.")]
     [SerializeField] private float timeBetweenPoints = 0.1f;
     [Tooltip("The gravity value to use for trajectory prediction. Should be a positive number.")]
     public float trajectoryGravity = 9.81f;
-    //[Tooltip("A multiplier to exaggerate the predicted arc for visual feedback.")]
-    //public float trajectoryGravityMultiplier = 1f;
 
     private void Awake()
     {
@@ -49,12 +45,14 @@ public class Player : MonoBehaviour
         startingPos = transform.position;
         IsBeingDragged = false;
         GetComponent<LineRenderer>().enabled = false;
-        // --- NEW ---
+
         // Ensure the trajectory line is hidden at the start
         if (trajectoryLineRenderer != null)
         {
             trajectoryLineRenderer.enabled = false;
         }
+
+        // Subscribes to GameManager events if the manager exists.
         try
         {
             GameManager.OnShotCountChanged += OnShotCountChanged;
@@ -65,12 +63,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    // This method is required to subscribe to the OnShotCountChanged event, but needs no logic for now.
     private void OnShotCountChanged(int newCount) { }
 
     private void Update()
     {
         if (isResetting) return;
 
+        // If dragging, draw the slingshot band from the start point to the nuke.
         if (IsBeingDragged)
         {
             GetComponent<LineRenderer>().SetPosition(0, transform.position);
@@ -82,11 +82,13 @@ public class Player : MonoBehaviour
             HandleBoundaries();
         }
 
+        // If the nuke has been thrown and has nearly stopped moving, start the reset timer.
         if (nukeThrown && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.5f)
         {
             TimeSinceLaunch += Time.deltaTime;
         }
 
+        // If the reset timer has finished, use a shot and reset the level.
         if (TimeSinceLaunch >= resetTimeAfterStop)
         {
             isResetting = true;
@@ -96,6 +98,7 @@ public class Player : MonoBehaviour
             }
             else
             {
+                // Fallback in case the GameManager doesn't exist in the scene.
                 Debug.LogWarning("GameManager not found! Resetting player directly as a fallback.");
                 ResetPlayer();
             }
@@ -105,38 +108,35 @@ public class Player : MonoBehaviour
     private void OnMouseDown()
     {
         if (nukeThrown) return;
+
         IsBeingDragged = true;
         lastDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         GetComponent<SpriteRenderer>().color = Color.red;
         GetComponent<LineRenderer>().enabled = true;
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(tensionSfxIndex);
 
-        // Show the trajectory line
+        // Show the trajectory prediction line.
         if (trajectoryLineRenderer != null)
         {
             trajectoryLineRenderer.enabled = true;
         }
-        //// --- NEW ---
-        //// Tell the GameManager to start the timer when we start dragging.
-        //if (GameManager.Instance != null)
-        //{
-        //    GameManager.Instance.StartLevelTimer();
-        //}
     }
 
     private void OnMouseUp()
     {
         if (nukeThrown) return;
+
         IsBeingDragged = false;
         nukeThrown = true;
         GetComponent<SpriteRenderer>().color = Color.white;
+
+        // Calculate the launch direction and apply the main force.
         directiontoInitialPos = startingPos - transform.position;
         GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
         GetComponent<Rigidbody2D>().gravityScale = 1;
-        GetComponent<LineRenderer>().enabled = false;
 
-        // --- NEW ---
-        // Hide the trajectory line
+        // Hide the slingshot band and trajectory line.
+        GetComponent<LineRenderer>().enabled = false;
         if (trajectoryLineRenderer != null)
         {
             trajectoryLineRenderer.enabled = false;
@@ -145,8 +145,7 @@ public class Player : MonoBehaviour
         if (AngryCameraFollow.Instance != null) AngryCameraFollow.Instance.ResumeFollowingPlayer();
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(launchSfxIndex);
 
-        // --- NEW ---
-        // Tell the GameManager to stop the timer when we release.
+        // Let the GameManager know the shot has been taken to stop the timer.
         if (GameManager.Instance != null)
         {
             GameManager.Instance.StopLevelTimer();
@@ -156,9 +155,12 @@ public class Player : MonoBehaviour
     private void OnMouseDrag()
     {
         if (nukeThrown) return;
+
         Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 delta = currentMousePosition - lastDragPosition;
         transform.position += delta * (SettingsManager.DragSensitivity * 2f);
+
+        // Limit how far the nuke can be pulled from its starting position.
         Vector3 directionFromStart = transform.position - startingPos;
         if (directionFromStart.magnitude > maxDragDistance)
         {
@@ -166,49 +168,49 @@ public class Player : MonoBehaviour
         }
         lastDragPosition = currentMousePosition;
 
-        // --- NEW ---
-        // Update the trajectory line's path
+        // Update the trajectory prediction line as the player drags.
         DrawTrajectory();
     }
 
-    /// Calculates and draws the predicted path of the projectile.
+    // Calculates and draws the predicted path of the projectile.
     private void DrawTrajectory()
     {
         if (trajectoryLineRenderer == null) return;
         var rb = GetComponent<Rigidbody2D>();
-        // --- THIS IS THE CRITICAL CHANGE ---
-        // We now use the NEW 'trajectoryForceMultiplier' for the visual prediction ONLY.
-        // The actual launch force remains separate and is used in OnMouseUp.
-        Vector2 launchVelocity = (startingPos - transform.position) * trajectoryForceMultiplier / rb.mass;
-        // --- END OF CHANGE ---
 
-        // Set up the line renderer
+        // Calculate the initial velocity for the prediction based on the actual launch force and the physics timestep.
+        // This makes the prediction perfectly match the real launch.
+        Vector2 launchVelocity = (startingPos - transform.position) * DirectionalInitialPosForce / rb.mass * Time.fixedDeltaTime;
+
         trajectoryLineRenderer.positionCount = trajectoryPoints;
         Vector3[] points = new Vector3[trajectoryPoints];
         Vector2 startPos = transform.position;
 
+        // Use kinematic equations to calculate each point in the trajectory arc.
         for (int i = 0; i < trajectoryPoints; i++)
         {
             float t = i * timeBetweenPoints;
-
-            // Calculate the X and Y positions separately
             Vector2 point = new Vector2(
                 startPos.x + launchVelocity.x * t,
                 startPos.y + launchVelocity.y * t - 0.5f * trajectoryGravity * t * t
             );
-
             points[i] = point;
         }
 
         trajectoryLineRenderer.SetPositions(points);
     }
+
+    // Handles player interaction with camera boundaries.
     private void HandleBoundaries()
     {
         if (AngryCameraFollow.Instance == null) return;
         var rb = GetComponent<Rigidbody2D>();
         if (rb == null) return;
+
         Vector3 currentPosition = transform.position;
         bool boundaryHit = false;
+
+        // Check each boundary and stop movement if it's hit.
         if (currentPosition.x <= AngryCameraFollow.Instance.leftLimit)
         {
             currentPosition.x = AngryCameraFollow.Instance.leftLimit;
@@ -221,6 +223,7 @@ public class Player : MonoBehaviour
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             boundaryHit = true;
         }
+
         if (currentPosition.y <= AngryCameraFollow.Instance.bottomLimit)
         {
             currentPosition.y = AngryCameraFollow.Instance.bottomLimit;
@@ -233,6 +236,7 @@ public class Player : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
             boundaryHit = true;
         }
+
         if (boundaryHit)
         {
             transform.position = currentPosition;
@@ -240,21 +244,288 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Resets the player's state and position for the next shot.
     public void ResetPlayer()
     {
         nukeThrown = false;
         isResetting = false;
         TimeSinceLaunch = 0f;
+
         var rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
+
         transform.position = startingPos;
         GetComponent<SpriteRenderer>().color = Color.white;
         GetComponent<LineRenderer>().enabled = false;
+
         Debug.Log("Player has been reset.");
     }
 }
+
+
+
+
+
+//// ====== Player.cs (MAGIC NUMBER TRAJECTORY LINE t(-_-)t ========
+//// ===== Player.cs (Updated) =====
+//using UnityEngine;
+
+//public class Player : MonoBehaviour
+//{
+//    public AngryCameraFollow mainCamera;
+//    private Collider2D _collider;
+
+//    public Vector3 startingPos { get; private set; }
+//    private Vector2 directiontoInitialPos;
+//    public float DirectionalInitialPosForce;
+//    private Vector3 lastDragPosition;
+
+//    private bool nukeThrown;
+
+//    [Tooltip("The maximum distance the player can drag the nuke from its start point.")]
+//    public float maxDragDistance = 3f;
+//    [Tooltip("Time in seconds before the scene resets after the nuke stops moving.")]
+//    public float resetTimeAfterStop = 1.2f;
+
+//    float TimeSinceLaunch;
+
+//    [Header("Sound Effect Indexes")]
+//    public int tensionSfxIndex;
+//    public int launchSfxIndex;
+
+//    private bool isResetting = false;
+//    public static bool IsBeingDragged { get; private set; }
+
+//    // --- NEW TRAJECTORY VARIABLES ---
+//    [Header("Trajectory")]
+//    [Tooltip("The LineRenderer component used to draw the projectile's path.")]
+//    public LineRenderer trajectoryLineRenderer;
+
+//    [Header("Trajectory Settings")]
+//    [Tooltip("A separate, smaller force value used ONLY for drawing the trajectory line accurately.")]
+//    public float trajectoryForceMultiplier = 20f; // <--- ADD THIS LINE    [Tooltip("The number of points to calculate for the trajectory line.")]
+//    [SerializeField] private int trajectoryPoints = 30;
+//    [Tooltip("The time interval between each calculated trajectory point.")]
+//    [SerializeField] private float timeBetweenPoints = 0.1f;
+//    [Tooltip("The gravity value to use for trajectory prediction. Should be a positive number.")]
+//    public float trajectoryGravity = 9.81f;
+//    //[Tooltip("A multiplier to exaggerate the predicted arc for visual feedback.")]
+//    //public float trajectoryGravityMultiplier = 1f;
+
+//    private void Awake()
+//    {
+//        _collider = GetComponent<Collider2D>();
+//        startingPos = transform.position;
+//        IsBeingDragged = false;
+//        GetComponent<LineRenderer>().enabled = false;
+//        // --- NEW ---
+//        // Ensure the trajectory line is hidden at the start
+//        if (trajectoryLineRenderer != null)
+//        {
+//            trajectoryLineRenderer.enabled = false;
+//        }
+//        try
+//        {
+//            GameManager.OnShotCountChanged += OnShotCountChanged;
+//        }
+//        catch (System.Exception e)
+//        {
+//            Debug.LogWarning("Could not subscribe to GameManager events: " + e.Message);
+//        }
+//    }
+
+//    private void OnShotCountChanged(int newCount) { }
+
+//    private void Update()
+//    {
+//        if (isResetting) return;
+
+//        if (IsBeingDragged)
+//        {
+//            GetComponent<LineRenderer>().SetPosition(0, transform.position);
+//            GetComponent<LineRenderer>().SetPosition(1, startingPos);
+//        }
+
+//        if (nukeThrown)
+//        {
+//            HandleBoundaries();
+//        }
+
+//        if (nukeThrown && GetComponent<Rigidbody2D>().linearVelocity.magnitude <= 0.5f)
+//        {
+//            TimeSinceLaunch += Time.deltaTime;
+//        }
+
+//        if (TimeSinceLaunch >= resetTimeAfterStop)
+//        {
+//            isResetting = true;
+//            if (GameManager.Instance != null)
+//            {
+//                GameManager.Instance.UseShot();
+//            }
+//            else
+//            {
+//                Debug.LogWarning("GameManager not found! Resetting player directly as a fallback.");
+//                ResetPlayer();
+//            }
+//        }
+//    }
+
+//    private void OnMouseDown()
+//    {
+//        if (nukeThrown) return;
+//        IsBeingDragged = true;
+//        lastDragPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+//        GetComponent<SpriteRenderer>().color = Color.red;
+//        GetComponent<LineRenderer>().enabled = true;
+//        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(tensionSfxIndex);
+
+//        // Show the trajectory line
+//        if (trajectoryLineRenderer != null)
+//        {
+//            trajectoryLineRenderer.enabled = true;
+//        }
+//        //// --- NEW ---
+//        //// Tell the GameManager to start the timer when we start dragging.
+//        //if (GameManager.Instance != null)
+//        //{
+//        //    GameManager.Instance.StartLevelTimer();
+//        //}
+//    }
+
+//    private void OnMouseUp()
+//    {
+//        if (nukeThrown) return;
+//        IsBeingDragged = false;
+//        nukeThrown = true;
+//        GetComponent<SpriteRenderer>().color = Color.white;
+//        directiontoInitialPos = startingPos - transform.position;
+//        GetComponent<Rigidbody2D>().AddForce(directiontoInitialPos * DirectionalInitialPosForce);
+//        GetComponent<Rigidbody2D>().gravityScale = 1;
+//        GetComponent<LineRenderer>().enabled = false;
+
+//        // --- NEW ---
+//        // Hide the trajectory line
+//        if (trajectoryLineRenderer != null)
+//        {
+//            trajectoryLineRenderer.enabled = false;
+//        }
+
+//        if (AngryCameraFollow.Instance != null) AngryCameraFollow.Instance.ResumeFollowingPlayer();
+//        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(launchSfxIndex);
+
+//        // --- NEW ---
+//        // Tell the GameManager to stop the timer when we release.
+//        if (GameManager.Instance != null)
+//        {
+//            GameManager.Instance.StopLevelTimer();
+//        }
+//    }
+
+//    private void OnMouseDrag()
+//    {
+//        if (nukeThrown) return;
+//        Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+//        Vector3 delta = currentMousePosition - lastDragPosition;
+//        transform.position += delta * (SettingsManager.DragSensitivity * 2f);
+//        Vector3 directionFromStart = transform.position - startingPos;
+//        if (directionFromStart.magnitude > maxDragDistance)
+//        {
+//            transform.position = startingPos + directionFromStart.normalized * maxDragDistance;
+//        }
+//        lastDragPosition = currentMousePosition;
+
+//        // --- NEW ---
+//        // Update the trajectory line's path
+//        DrawTrajectory();
+//    }
+
+//    /// Calculates and draws the predicted path of the projectile.
+//    private void DrawTrajectory()
+//    {
+//        if (trajectoryLineRenderer == null) return;
+//        var rb = GetComponent<Rigidbody2D>();
+//        // --- THIS IS THE CRITICAL CHANGE ---
+//        // We now use the NEW 'trajectoryForceMultiplier' for the visual prediction ONLY.
+//        // The actual launch force remains separate and is used in OnMouseUp.
+//        Vector2 launchVelocity = (startingPos - transform.position) * trajectoryForceMultiplier / rb.mass;
+//        // --- END OF CHANGE ---
+
+//        // Set up the line renderer
+//        trajectoryLineRenderer.positionCount = trajectoryPoints;
+//        Vector3[] points = new Vector3[trajectoryPoints];
+//        Vector2 startPos = transform.position;
+
+//        for (int i = 0; i < trajectoryPoints; i++)
+//        {
+//            float t = i * timeBetweenPoints;
+
+//            // Calculate the X and Y positions separately
+//            Vector2 point = new Vector2(
+//                startPos.x + launchVelocity.x * t,
+//                startPos.y + launchVelocity.y * t - 0.5f * trajectoryGravity * t * t
+//            );
+
+//            points[i] = point;
+//        }
+
+//        trajectoryLineRenderer.SetPositions(points);
+//    }
+//    private void HandleBoundaries()
+//    {
+//        if (AngryCameraFollow.Instance == null) return;
+//        var rb = GetComponent<Rigidbody2D>();
+//        if (rb == null) return;
+//        Vector3 currentPosition = transform.position;
+//        bool boundaryHit = false;
+//        if (currentPosition.x <= AngryCameraFollow.Instance.leftLimit)
+//        {
+//            currentPosition.x = AngryCameraFollow.Instance.leftLimit;
+//            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+//            boundaryHit = true;
+//        }
+//        else if (currentPosition.x >= AngryCameraFollow.Instance.rightLimit)
+//        {
+//            currentPosition.x = AngryCameraFollow.Instance.rightLimit;
+//            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+//            boundaryHit = true;
+//        }
+//        if (currentPosition.y <= AngryCameraFollow.Instance.bottomLimit)
+//        {
+//            currentPosition.y = AngryCameraFollow.Instance.bottomLimit;
+//            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+//            boundaryHit = true;
+//        }
+//        else if (currentPosition.y >= AngryCameraFollow.Instance.topLimit)
+//        {
+//            currentPosition.y = AngryCameraFollow.Instance.topLimit;
+//            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+//            boundaryHit = true;
+//        }
+//        if (boundaryHit)
+//        {
+//            transform.position = currentPosition;
+//            rb.angularVelocity = 0;
+//        }
+//    }
+
+//    public void ResetPlayer()
+//    {
+//        nukeThrown = false;
+//        isResetting = false;
+//        TimeSinceLaunch = 0f;
+//        var rb = GetComponent<Rigidbody2D>();
+//        rb.gravityScale = 0;
+//        rb.linearVelocity = Vector2.zero;
+//        rb.angularVelocity = 0;
+//        transform.position = startingPos;
+//        GetComponent<SpriteRenderer>().color = Color.white;
+//        GetComponent<LineRenderer>().enabled = false;
+//        Debug.Log("Player has been reset.");
+//    }
+//}
 
 
 
