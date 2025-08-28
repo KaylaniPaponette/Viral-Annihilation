@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("The base score that gets multiplied by the time bonus.")]
     [SerializeField] private int baseTimeScore = 2000;
     [Tooltip("How many points are awarded for each shot remaining.")]
-    [SerializeField] private int bonusPerShotLeft = 500;
+    [SerializeField] private int bonusPerShotLeft = 1000;
 
 
     [System.Serializable]
