@@ -1799,7 +1799,7 @@ MonoBehaviour:
   pauseMenuPanel: {fileID: 3821586317654385345}
   settingsMenu: {fileID: 174936698770039019}
   scoreTickSfxIndex: 7
-  scoreCompleteSfxIndex: 9
+  scoreCompleteSfxIndex: 6
   timeBetweenTicks: 0.05
   scoreTickPitch: 3
 --- !u!114 &6219252519208903559
@@ -2106,7 +2106,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3883624372072365428
 RectTransform:
   m_ObjectHideFlags: 0
