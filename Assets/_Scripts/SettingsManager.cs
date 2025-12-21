@@ -27,7 +27,7 @@ public static class SettingsManager
     public static void LoadSettings()
     {
         // Load all values from PlayerPrefs, with defaults
-        DragSensitivity = PlayerPrefs.GetFloat(DragSensitivityKey, 1.0f);
+        DragSensitivity = PlayerPrefs.GetFloat(DragSensitivityKey, 0.25f);
         MasterVolume = PlayerPrefs.GetFloat(MasterVolumeKey, 1.0f);
         MusicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, 1.0f);
         SFXVolume = PlayerPrefs.GetFloat(SFXVolumeKey, 1.0f);

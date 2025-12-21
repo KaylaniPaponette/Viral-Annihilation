@@ -25,8 +25,10 @@ public class SettingsMenu : MonoBehaviour
         musicSlider.value = SettingsManager.MusicVolume;
         sfxSlider.value = SettingsManager.SFXVolume;
         muteToggle.isOn = SettingsManager.IsMuted;
-        sensitivitySlider.value = SettingsManager.DragSensitivity;
-        sensitivityValueText.text = (SettingsManager.DragSensitivity * 100).ToString("F0") + "%";
+        sensitivitySlider.value = SettingsManager.DragSensitivity / 0.5f;
+        // Display the percentage based on the slider (0.0 to 1.0)
+        sensitivityValueText.text = (sensitivitySlider.value * 100).ToString("F0") + "%";
+        //sensitivityValueText.text = (SettingsManager.DragSensitivity * 100).ToString("F0") + "%";
     }
 
     // The methods below are called by the UI elements' OnValueChanged events
@@ -61,8 +63,19 @@ public class SettingsMenu : MonoBehaviour
 
     public void OnSensitivityChanged(float value)
     {
-        SettingsManager.SetDragSensitivity(value);
+        // Remap the 0.0-1.0 slider value to a 0.0-0.5 actual sensitivity value
+        float actualSensitivity = value * 0.5f;
+
+        SettingsManager.SetDragSensitivity(actualSensitivity);
+
+        // Update the text to show the slider's percentage (0-100%)
         sensitivityValueText.text = (value * 100).ToString("F0") + "%";
         SettingsManager.SaveSettings();
     }
+    //public void OnSensitivityChanged(float value)
+    //{
+    //    SettingsManager.SetDragSensitivity(value);
+    //    sensitivityValueText.text = (value * 100).ToString("F0") + "%";
+    //    SettingsManager.SaveSettings();
+    //}
 }

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private Collider2D _collider;
 
     public Vector3 startingPos { get; private set; }
+    public Quaternion startingRotation { get; private set; }
     private Vector2 directiontoInitialPos;
     public float DirectionalInitialPosForce;
     private Vector3 lastDragPosition;
@@ -56,7 +57,11 @@ public class Player : MonoBehaviour
     {
         _collider = GetComponent<Collider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // 2. Store both position AND rotation at the very start
         startingPos = transform.position;
+        startingRotation = transform.rotation;
+
         IsBeingDragged = false;
         GetComponent<LineRenderer>().enabled = false;
 
@@ -310,6 +315,7 @@ public class Player : MonoBehaviour
         rb.angularVelocity = 0;
 
         transform.position = startingPos;
+        transform.rotation = startingRotation; // <--- ADD THIS LINE
 
         // RE-ENABLE the components that were hidden
         _spriteRenderer.enabled = true;
@@ -318,7 +324,7 @@ public class Player : MonoBehaviour
 
         GetComponent<LineRenderer>().enabled = false;
 
-        Debug.Log("Player has been reset.");
+        Debug.Log("Player has been reset with original orientation.");
     }
 }
 
