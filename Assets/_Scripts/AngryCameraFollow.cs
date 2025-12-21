@@ -47,6 +47,8 @@ public class AngryCameraFollow : MonoBehaviour
     private Vector3 lastPlayerPosition;
     private float cameraHeight;
     private float cameraWidth;
+    private Camera _cam;
+    private float _absoluteMaxZoom; // The zoom limit based on level boundaries
 
     public static AngryCameraFollow Instance { get; private set; }
 
@@ -62,8 +64,29 @@ public class AngryCameraFollow : MonoBehaviour
         }
     }
 
+    //void Start()
+    //{
+    //    if (enemyFocusPoint != null)
+    //    {
+    //        transform.position = new Vector3(enemyFocusPoint.position.x, enemyFocusPoint.position.y, transform.position.z);
+    //    }
+
+    //    offset = new Vector3(0, 0, transform.position.z);
+    //    currentState = CameraState.WaitingAtStart;
+    //    panTimer = 0f;
+
+    //    Camera mainCamera = Camera.main;
+    //    cameraHeight = 2f * mainCamera.orthographicSize;
+    //    cameraWidth = cameraHeight * mainCamera.aspect;
+    //    if (player != null)
+    //    {
+    //        lastPlayerPosition = player.position;
+    //    }
+    //}
     void Start()
     {
+        _cam = GetComponent<Camera>(); // Cache the component for performance
+
         if (enemyFocusPoint != null)
         {
             transform.position = new Vector3(enemyFocusPoint.position.x, enemyFocusPoint.position.y, transform.position.z);
@@ -73,9 +96,22 @@ public class AngryCameraFollow : MonoBehaviour
         currentState = CameraState.WaitingAtStart;
         panTimer = 0f;
 
-        Camera mainCamera = Camera.main;
-        cameraHeight = 2f * mainCamera.orthographicSize;
-        cameraWidth = cameraHeight * mainCamera.aspect;
+        // --- NEW: Calculate Absolute Max Zoom based on boundaries ---
+        float levelWidth = rightLimit - leftLimit;
+        float levelHeight = topLimit - bottomLimit;
+
+        // We find the max zoom for height, and the max zoom for width (considering aspect ratio)
+        float maxZoomByHeight = levelHeight / 2f;
+        float maxZoomByWidth = (levelWidth / _cam.aspect) / 2f;
+
+        // The absolute limit is whichever one is smaller (the first one to hit a wall)
+        _absoluteMaxZoom = Mathf.Min(maxZoomByHeight, maxZoomByWidth);
+
+        // If your manual 'maxZoom' is smaller than this, keep the manual one.
+        // This prevents zooming out too far even in massive levels.
+        maxZoom = Mathf.Min(maxZoom, _absoluteMaxZoom);
+        // -------------------------------------------------------------
+
         if (player != null)
         {
             lastPlayerPosition = player.position;
@@ -110,21 +146,45 @@ public class AngryCameraFollow : MonoBehaviour
         ClampCameraPosition();
     }
 
-    // Extracted the clamping logic into its own method for clarity
+    //// Extracted the clamping logic into its own method for clarity
+    //void ClampCameraPosition()
+    //{
+    //    Camera mainCamera = Camera.main;
+    //    cameraHeight = 2f * mainCamera.orthographicSize;
+    //    cameraWidth = cameraHeight * mainCamera.aspect;
+
+    //    float minX = leftLimit + cameraWidth / 2;
+    //    float maxX = rightLimit - cameraWidth / 2;
+    //    float minY = bottomLimit + cameraHeight / 2;
+    //    float maxY = topLimit - cameraHeight / 2;
+
+    //    Vector3 clampedPosition = transform.position;
+    //    clampedPosition.x = Mathf.Clamp(clampedPosition.x, minX, maxX);
+    //    clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
+    //    transform.position = clampedPosition;
+    //}
+
     void ClampCameraPosition()
     {
-        Camera mainCamera = Camera.main;
-        cameraHeight = 2f * mainCamera.orthographicSize;
-        cameraWidth = cameraHeight * mainCamera.aspect;
+        if (_cam == null) return;
 
-        float minX = leftLimit + cameraWidth / 2;
-        float maxX = rightLimit - cameraWidth / 2;
-        float minY = bottomLimit + cameraHeight / 2;
-        float maxY = topLimit - cameraHeight / 2;
+        float currentHeight = 2f * _cam.orthographicSize;
+        float currentWidth = currentHeight * _cam.aspect;
+
+        float minX = leftLimit + currentWidth / 2f;
+        float maxX = rightLimit - currentWidth / 2f;
+        float minY = bottomLimit + currentHeight / 2f;
+        float maxY = topLimit - currentHeight / 2f;
 
         Vector3 clampedPosition = transform.position;
-        clampedPosition.x = Mathf.Clamp(clampedPosition.x, minX, maxX);
-        clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
+
+        // Centering logic if camera is larger than bounds
+        if (minX > maxX) clampedPosition.x = (leftLimit + rightLimit) / 2f;
+        else clampedPosition.x = Mathf.Clamp(clampedPosition.x, minX, maxX);
+
+        if (minY > maxY) clampedPosition.y = (bottomLimit + topLimit) / 2f;
+        else clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
+
         transform.position = clampedPosition;
     }
 
@@ -244,22 +304,45 @@ public class AngryCameraFollow : MonoBehaviour
         Debug.Log("Camera has been reset.");
     }
 
+    //void HandleZoom()
+    //{
+    //    if (Input.touchCount == 2)
+    //    {
+    //        Touch touchZero = Input.GetTouch(0);
+    //        Touch touchOne = Input.GetTouch(1);
+    //        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+    //        Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+    //        float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+    //        float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+    //        float difference = currentMagnitude - prevMagnitude;
+    //        Camera mainCamera = Camera.main;
+    //        mainCamera.orthographicSize -= difference * zoomSpeed;
+    //        mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
+    //    }
+    //}
+
     void HandleZoom()
+{
+    if (Input.touchCount == 2)
     {
-        if (Input.touchCount == 2)
-        {
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-            float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-            float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
-            float difference = currentMagnitude - prevMagnitude;
-            Camera mainCamera = Camera.main;
-            mainCamera.orthographicSize -= difference * zoomSpeed;
-            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, minZoom, maxZoom);
-        }
+        Touch touchZero = Input.GetTouch(0);
+        Touch touchOne = Input.GetTouch(1);
+
+        Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+        Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+        float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+        float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+
+        float difference = currentMagnitude - prevMagnitude;
+
+        // Use the cached _cam instead of Camera.main
+        _cam.orthographicSize -= difference * zoomSpeed;
+
+        // Clamp using our dynamically calculated maxZoom
+        _cam.orthographicSize = Mathf.Clamp(_cam.orthographicSize, minZoom, maxZoom);
     }
+}
 
     void OnDrawGizmos()
     {
