@@ -19,6 +19,12 @@ public class Player : MonoBehaviour
     [Tooltip("The maximum distance the player can drag the nuke from its start point.")]
     public float maxDragDistance = 3f;
 
+    [Header("Safe Release Settings")]
+    [Tooltip("The distance from the start point required to actually launch the nuke.")]
+    public float releaseThreshold = 0.5f;
+    [Tooltip("Color of the nuke when it's in the safe zone (won't fire).")]
+    public Color safeZoneColor = Color.gray;
+
     private bool isResetting = false;
 
     [Header("Explosion Settings")]
@@ -108,6 +114,18 @@ public class Player : MonoBehaviour
         if (nukeThrown) return;
 
         IsBeingDragged = false;
+        float distance = Vector3.Distance(transform.position, startingPos);
+
+        // --- CHECK THE THRESHOLD ---
+        if (distance < releaseThreshold)
+        {
+            // Cancel the shot and reset visually
+            ResetPlayer();
+            Debug.Log("Shot canceled: Within safe release threshold.");
+            return; // Exit the method early so we don't launch!
+        }
+
+        // --- ORIGINAL LAUNCH LOGIC ---
         nukeThrown = true;
         _spriteRenderer.color = Color.white;
 
@@ -116,38 +134,59 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().gravityScale = 1;
 
         GetComponent<LineRenderer>().enabled = false;
-        if (trajectoryLineRenderer != null)
-        {
-            trajectoryLineRenderer.enabled = false;
-        }
+        if (trajectoryLineRenderer != null) trajectoryLineRenderer.enabled = false;
 
         if (AngryCameraFollow.Instance != null) AngryCameraFollow.Instance.ResumeFollowingPlayer();
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(launchSfxIndex);
 
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.StopLevelTimer();
-        }
+        if (GameManager.Instance != null) GameManager.Instance.StopLevelTimer();
 
         StartCoroutine(ExplosionRoutine());
     }
 
     private void OnMouseDrag()
     {
+        // 1. Safety Check: If already thrown, do nothing
         if (nukeThrown) return;
 
+        // 2. Handle Movement: Update position based on mouse delta and sensitivity
         Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 delta = currentMousePosition - lastDragPosition;
-        transform.position += delta * (SettingsManager.DragSensitivity * 2f);
+        transform.position += delta * (SettingsManager.DragSensitivity * 2f); //
 
+        // 3. Clamping: Ensure the player doesn't drag beyond maxDragDistance
         Vector3 directionFromStart = transform.position - startingPos;
         if (directionFromStart.magnitude > maxDragDistance)
         {
-            transform.position = startingPos + directionFromStart.normalized * maxDragDistance;
+            transform.position = startingPos + directionFromStart.normalized * maxDragDistance; //
         }
-        lastDragPosition = currentMousePosition;
+        lastDragPosition = currentMousePosition; //
 
-        DrawTrajectory();
+        // 4. Safe Zone Logic: Determine if we should show the trajectory and change color
+        float distance = Vector3.Distance(transform.position, startingPos);
+
+        if (distance < releaseThreshold)
+        {
+            // Player is too close to start; treat as "Canceling"
+            _spriteRenderer.color = safeZoneColor;
+
+            if (trajectoryLineRenderer != null)
+            {
+                trajectoryLineRenderer.enabled = false;
+            }
+        }
+        else
+        {
+            // Player is far enough; treat as "Aiming"
+            _spriteRenderer.color = Color.red; // Visual cue for "Ready to fire"
+
+            if (trajectoryLineRenderer != null)
+            {
+                trajectoryLineRenderer.enabled = true;
+                // Only calculate trajectory when it's actually visible
+                DrawTrajectory();
+            }
+        }
     }
 
     private void DrawTrajectory()

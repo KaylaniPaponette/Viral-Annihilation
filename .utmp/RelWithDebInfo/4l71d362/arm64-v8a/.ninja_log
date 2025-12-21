@@ -1,12 +1,23 @@
 # ninja log v5
-88	707	7880339065718184	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8c0c265134583114
-709	1193	7880339070334212	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libswappywrapper.so	41db491775dc124b
-59	2766	7880339086289580	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	9e5c19de2fda7378
-38	2776	7880339086339351	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	38f5fd32b3e731a0
-9	2864	7880339087049437	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	f0f5b47e85dc1684
-73	2901	7880339087536850	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9522a15b082d592e
-28	3063	7880339089130152	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c0baec1922944925
-47	3301	7880339091657733	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	af6cb1338bcd7ed7
-17	3337	7880339092090436	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3feb7f969d11879c
-1	3539	7880339094063931	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5238ca66c63cce5
-3539	3741	7880339096134745	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libgame.so	869e28b3e4f3d0d2
+15	1755	7880435642158295	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5238ca66c63cce5
+67	243	7880435627105966	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8c0c265134583114
+35	1636	7880435640993855	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3feb7f969d11879c
+244	445	7880435628963229	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libswappywrapper.so	41db491775dc124b
+43	1368	7880435638286474	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	9e5c19de2fda7378
+29	1329	7880435637930046	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	38f5fd32b3e731a0
+50	1517	7880435639703598	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	af6cb1338bcd7ed7
+23	1366	7880435638286474	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	f0f5b47e85dc1684
+7	1434	7880435639007999	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c0baec1922944925
+58	1388	7880435638524647	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9522a15b082d592e
+1755	1878	7880435643459805	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libgame.so	869e28b3e4f3d0d2
+81	264	7880438532933769	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8c0c265134583114
+265	452	7880438534670115	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libswappywrapper.so	41db491775dc124b
+70	1180	7880438542058335	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	9e5c19de2fda7378
+43	1182	7880438542078461	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	38f5fd32b3e731a0
+8	1211	7880438542389845	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	f0f5b47e85dc1684
+61	1230	7880438542591463	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9522a15b082d592e
+26	1255	7880438542847694	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c0baec1922944925
+52	1327	7880438543577376	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	af6cb1338bcd7ed7
+35	1423	7880438544515169	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3feb7f969d11879c
+18	1525	7880438545512242	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5238ca66c63cce5
+1525	1670	7880438547000119	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libgame.so	869e28b3e4f3d0d2
