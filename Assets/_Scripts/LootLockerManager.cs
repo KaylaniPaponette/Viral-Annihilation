@@ -10,6 +10,9 @@ public class LootLockerManager : MonoBehaviour
     // IMPORTANT: Replace this with the ID from your LootLocker dashboard!
     private int leaderboardID = 31702; // <--- This should be your ID
 
+    // --- NEW: Store the Player ID here ---
+    public string CurrentPlayerID { get; private set; }
+
     // --- NEW ---
     // Key to save the player's name locally
     private const string PlayerNamePrefsKey = "PlayerName";
@@ -34,12 +37,14 @@ public class LootLockerManager : MonoBehaviour
             if (response.success)
             {
                 Debug.Log("LootLocker session started successfully.");
-                // --- NEW ---
-                // When the session starts, check if we have a saved name and set it
+
+                // --- NEW: Save the ID from the response ---
+                CurrentPlayerID = response.player_id.ToString();
+
                 if (PlayerPrefs.HasKey(PlayerNamePrefsKey))
                 {
                     string savedName = PlayerPrefs.GetString(PlayerNamePrefsKey);
-                    SetPlayerName(savedName, null); // Set the name without needing a callback here
+                    SetPlayerName(savedName, null);
                 }
             }
             else
