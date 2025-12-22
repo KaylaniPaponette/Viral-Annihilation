@@ -51,10 +51,14 @@ public class AdOfferController : MonoBehaviour
     void OnWatchAdClicked()
     {
         Debug.Log("Player chose to watch the ad.");
-        // Call the AdsManager to show the ad
-        AdsManager.Instance.ShowRewardedAd();
-        // Hide the panel so they don't click it again
+
+        // Hide the panel first
         HideOffer();
+
+        // Ideally, check if the ad is loaded (Unity Ads doesn't have a direct 'isLoaded' 
+        // bool in the new API without custom tracking, but we can call show and 
+        // let our improved ShowFailure logic handle the rest).
+        AdsManager.Instance.ShowRewardedAd();
     }
 
     void OnDeclineClicked()

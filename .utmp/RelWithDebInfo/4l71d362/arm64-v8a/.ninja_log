@@ -1,23 +1,23 @@
 # ninja log v5
-10	1878	7880538648643604	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5238ca66c63cce5
-109	552	7880538635665684	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8c0c265134583114
-44	1725	7880538647499713	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3feb7f969d11879c
-553	899	7880538638980951	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libswappywrapper.so	41db491775dc124b
-55	1483	7880538645044730	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	9e5c19de2fda7378
-66	1485	7880538645044730	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	38f5fd32b3e731a0
-78	1653	7880538646762771	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	af6cb1338bcd7ed7
-20	1489	7880538645090414	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	f0f5b47e85dc1684
-36	1551	7880538645729224	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c0baec1922944925
-93	1573	7880538645956612	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9522a15b082d592e
-1878	2016	7880538650370158	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libgame.so	869e28b3e4f3d0d2
+16	1816	7880540124136688	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5238ca66c63cce5
 94	341	7880540109424777	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8c0c265134583114
 342	553	7880540111427759	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libswappywrapper.so	41db491775dc124b
+53	1675	7880540122758912	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3feb7f969d11879c
 36	1319	7880540119122019	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	9e5c19de2fda7378
 44	1331	7880540119167237	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	38f5fd32b3e731a0
 8	1340	7880540119269233	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	f0f5b47e85dc1684
-68	1396	7880540119935010	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9522a15b082d592e
-26	1420	7880540120196645	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c0baec1922944925
 77	1539	7880540121389430	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	af6cb1338bcd7ed7
-53	1675	7880540122758912	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3feb7f969d11879c
-16	1816	7880540124136688	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5238ca66c63cce5
+26	1420	7880540120196645	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c0baec1922944925
+68	1396	7880540119935010	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9522a15b082d592e
 1816	1969	7880540125694745	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libgame.so	869e28b3e4f3d0d2
+82	665	7880630874555527	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	8c0c265134583114
+666	1050	7880630878238395	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libswappywrapper.so	41db491775dc124b
+36	2499	7880630892889161	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	9e5c19de2fda7378
+43	2512	7880630892966327	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	38f5fd32b3e731a0
+20	2540	7880630893329925	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	f0f5b47e85dc1684
+72	2568	7880630893616680	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	9522a15b082d592e
+29	2644	7880630894312272	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	c0baec1922944925
+54	2925	7880630897191274	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3feb7f969d11879c
+13	3086	7880630898782476	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	5238ca66c63cce5
+62	3147	7880630899407560	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	af6cb1338bcd7ed7
+3147	3301	7880630900949680	C:/Users/dipap/Desktop/Viral Annihilation2.0/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/4l71d362/obj/arm64-v8a/libgame.so	869e28b3e4f3d0d2

@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [Header("In-Game HUD Elements")]
     [SerializeField] private TextMeshProUGUI shotCountText;
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI levelIndicatorText;
 
     [Header("Level Complete Screen")]
     [SerializeField] private GameObject levelCompletePanel;
@@ -152,6 +153,15 @@ public class UIManager : MonoBehaviour
             int minutes = Mathf.FloorToInt(timeInSeconds / 60F);
             int seconds = Mathf.FloorToInt(timeInSeconds % 60F);
             timerText.text = $"Time: {minutes:00}:{seconds:00}";
+        }
+    }
+
+    public void UpdateLevelIndicator(int current, int total)
+    {
+        if (levelIndicatorText != null)
+        {
+            // The :00 ensures it always shows two digits (e.g., 01 instead of 1)
+            levelIndicatorText.text = $"Level {current:00} / {total:00}";
         }
     }
 

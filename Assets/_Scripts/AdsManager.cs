@@ -47,14 +47,27 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         Advertisement.Show(_rewardedVideoPlacementId, this);
     }
 
+    // 1. Create a dedicated Load method
+    public void LoadAd()
+    {
+        Debug.Log($"Loading Ad: {_rewardedVideoPlacementId}");
+        Advertisement.Load(_rewardedVideoPlacementId, this);
+    }
+
     // --- Interface Implementation ---
 
+    // 2. Update OnInitializationComplete to use the new method
     public void OnInitializationComplete()
     {
         Debug.Log("Unity Ads initialization complete.");
-        // Pre-load the rewarded ad
-        Advertisement.Load(_rewardedVideoPlacementId, this);
+        LoadAd(); // Use the helper
     }
+    //public void OnInitializationComplete()
+    //{
+    //    Debug.Log("Unity Ads initialization complete.");
+    //    // Pre-load the rewarded ad
+    //    Advertisement.Load(_rewardedVideoPlacementId, this);
+    //}
 
 
 
@@ -73,10 +86,25 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         Debug.Log($"Error loading Ad Unit {placementId}: {error.ToString()} - {message}");
     }
 
+    // 4. Update OnUnityAdsShowFailure to prevent the softlock
     public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
     {
-        Debug.Log($"Error showing Ad Unit {placementId}: {error.ToString()} - {message}");
+        Debug.LogError($"Ad Show Failed: {error} - {message}");
+
+        // Resume the game so it doesn't softlock!
+        Time.timeScale = 1f;
+
+        // If we can't show an ad, we should probably just go to Game Over
+        // or give them the shot anyway if you're feeling generous.
+        GameManager.Instance.GoToGameOver();
+
+        // Try to load again for next time
+        LoadAd();
     }
+    //public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
+    //{
+    //    Debug.Log($"Error showing Ad Unit {placementId}: {error.ToString()} - {message}");
+    //}
 
     public void OnUnityAdsShowStart(string placementId)
     {
@@ -90,21 +118,43 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener, IUnity
         Debug.Log($"Ad clicked for placement: {placementId}");
     }
 
+    // 3. Update OnUnityAdsShowComplete to reload for the NEXT time
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
-        Debug.Log($"Ad completed for placement: {placementId} with state: {showCompletionState}");
-        Time.timeScale = 1f; // Resume game
-        if (placementId.Equals(_rewardedVideoPlacementId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+        Debug.Log($"Ad completed: {placementId} state: {showCompletionState}");
+        Time.timeScale = 1f;
+
+        if (placementId.Equals(_rewardedVideoPlacementId))
         {
-            Debug.Log("Rewarded ad completed! Granting extra shot.");
-            // Grant the reward
-            GameManager.Instance.GrantExtraShot();
-        }
-        else if (placementId.Equals(_rewardedVideoPlacementId) && showCompletionState.Equals(UnityAdsShowCompletionState.SKIPPED))
-        {
-            Debug.Log("Ad was skipped. No reward.");
-            // Decide if you want to go to game over immediately
-            GameManager.Instance.GoToGameOver();
+            if (showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+            {
+                GameManager.Instance.GrantExtraShot();
+            }
+            else
+            {
+                GameManager.Instance.GoToGameOver();
+            }
+
+            // --- THE FIX ---
+            // Load the NEXT ad immediately so it's ready for the next time they lose
+            LoadAd();
         }
     }
+    //public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
+    //{
+    //    Debug.Log($"Ad completed for placement: {placementId} with state: {showCompletionState}");
+    //    Time.timeScale = 1f; // Resume game
+    //    if (placementId.Equals(_rewardedVideoPlacementId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
+    //    {
+    //        Debug.Log("Rewarded ad completed! Granting extra shot.");
+    //        // Grant the reward
+    //        GameManager.Instance.GrantExtraShot();
+    //    }
+    //    else if (placementId.Equals(_rewardedVideoPlacementId) && showCompletionState.Equals(UnityAdsShowCompletionState.SKIPPED))
+    //    {
+    //        Debug.Log("Ad was skipped. No reward.");
+    //        // Decide if you want to go to game over immediately
+    //        GameManager.Instance.GoToGameOver();
+    //    }
+    //}
 }

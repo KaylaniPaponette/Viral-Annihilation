@@ -107,13 +107,30 @@ public class GameManager : MonoBehaviour
         {
             if (newSceneName != this.currentLevel) levelTimer = 0f;
 
-            // --- MODIFIED ---
-            // False so thgat the timer will now wait for the player to start aiming.
             isTimerRunning = true;
 
-            if (UIManager.Instance != null) UIManager.Instance.UpdateShotCount(shotCount, maxShots);
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.UpdateShotCount(shotCount, maxShots);
+
+                // --- ADD THESE LINES ---
+                int currentNum = GetCurrentLevelNumber();
+                int totalNum = GetTotalPlayableLevels();
+                UIManager.Instance.UpdateLevelIndicator(currentNum, totalNum);
+            }
             enemyCheckTimer = 0;
         }
+        //if (isGameplayLevel)
+        //{
+        //    if (newSceneName != this.currentLevel) levelTimer = 0f;
+
+        //    // --- MODIFIED ---
+        //    // False so thgat the timer will now wait for the player to start aiming.
+        //    isTimerRunning = true;
+
+        //    if (UIManager.Instance != null) UIManager.Instance.UpdateShotCount(shotCount, maxShots);
+        //    enemyCheckTimer = 0;
+        //}
         else
         {
             isTimerRunning = false;
@@ -151,6 +168,33 @@ public class GameManager : MonoBehaviour
     LevelData GetLevelData(string sceneName)
     {
         return levelSequence.Find(level => level.sceneName == sceneName || level.sceneName.EndsWith("/" + sceneName));
+    }
+
+    // Returns the total number of levels where isPlayableLevel is true
+    public int GetTotalPlayableLevels()
+    {
+        return levelSequence.FindAll(l => l.isPlayableLevel).Count;
+    }
+
+    // Returns the 1-based index of the current level among playable levels
+    public int GetCurrentLevelNumber()
+    {
+        int playableIndex = 0;
+        string activeScene = SceneManager.GetActiveScene().name;
+
+        foreach (var level in levelSequence)
+        {
+            if (level.isPlayableLevel)
+            {
+                playableIndex++;
+                // Check if this is the current scene
+                if (level.sceneName == activeScene || level.sceneName.EndsWith("/" + activeScene))
+                {
+                    return playableIndex;
+                }
+            }
+        }
+        return 0; // Return 0 if not a playable level (e.g., Main Menu)
     }
 
     void Update()
