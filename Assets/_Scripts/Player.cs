@@ -12,19 +12,44 @@ public class Player : MonoBehaviour
     private Vector2 directiontoInitialPos;
     public float DirectionalInitialPosForce;
     private Vector3 lastDragPosition;
+    private Collider2D[] _allColliders;
     private SpriteRenderer _spriteRenderer;
 
     private bool nukeThrown;
     public static bool IsBeingDragged { get; private set; }
 
     [Tooltip("The maximum distance the player can drag the nuke from its start point.")]
-    public float maxDragDistance = 3f;
+    public float maxDragDistance = 5f;
+
+    [Header("Visual Feedback Settings")]
+    [Tooltip("Color of the nuke when it is ready to fire.")]
+    public Color readyZoneColor = Color.red; //
+    [Tooltip("The scale of the nuke when it is in the safe zone.")]
+    public float normalScale = 1.0f;
+    [Tooltip("The scale of the nuke when it enters the ready zone.")]
+    public float readyScale = 1.5f;
+    [Tooltip("How fast the nuke scales up or down.")]
+    public float scaleSpeed = 10f;
 
     [Header("Safe Release Settings")]
     [Tooltip("The distance from the start point required to actually launch the nuke.")]
     public float releaseThreshold = 0.5f;
     [Tooltip("Color of the nuke when it's in the safe zone (won't fire).")]
     public Color safeZoneColor = Color.gray;
+
+    [Header("Trajectory Visuals")]
+    [Tooltip("Color of the trajectory when in the safe zone (not firing).")]
+    public Color trajectorySafeColor = new Color(0.5f, 0.5f, 0.5f, 0.3f); // Faded Gray
+    [Tooltip("Color of the trajectory when ready to fire.")]
+    public Color trajectoryReadyColor = Color.red;
+    [Tooltip("How thick the line should be.")]
+    public float trajectoryWidth = 0.1f;
+
+    [Header("Trajectory Materials")]
+    [Tooltip("The material used when the nuke is too close to the start point.")]
+    public Material safeTrajectoryMaterial;
+    [Tooltip("The material used when the nuke is ready to be launched.")]
+    public Material readyTrajectoryMaterial;
 
     private bool isResetting = false;
 
@@ -56,6 +81,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _collider = GetComponent<Collider2D>();
+        _allColliders = GetComponentsInChildren<Collider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
         // 2. Store both position AND rotation at the very start
@@ -119,15 +145,21 @@ public class Player : MonoBehaviour
         if (nukeThrown) return;
 
         IsBeingDragged = false;
+        // --- RESET SCALE IMMEDIATELY ON RELEASE ---
+        transform.localScale = Vector3.one * normalScale;
+
         float distance = Vector3.Distance(transform.position, startingPos);
 
-        // --- CHECK THE THRESHOLD ---
         if (distance < releaseThreshold)
         {
-            // Cancel the shot and reset visually
+            if (trajectoryLineRenderer != null)
+            {
+                trajectoryLineRenderer.enabled = false;
+            }
+
             ResetPlayer();
             Debug.Log("Shot canceled: Within safe release threshold.");
-            return; // Exit the method early so we don't launch!
+            return;
         }
 
         // --- ORIGINAL LAUNCH LOGIC ---
@@ -149,49 +181,57 @@ public class Player : MonoBehaviour
         StartCoroutine(ExplosionRoutine());
     }
 
+    // Inside Player.cs
+
     private void OnMouseDrag()
     {
-        // 1. Safety Check: If already thrown, do nothing
         if (nukeThrown) return;
 
-        // 2. Handle Movement: Update position based on mouse delta and sensitivity
+        // Movement & Clamping logic (Keep this as is)
         Vector3 currentMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 delta = currentMousePosition - lastDragPosition;
-        transform.position += delta * (SettingsManager.DragSensitivity * 2f); //
+        transform.position += delta * (SettingsManager.DragSensitivity * 2f);
 
-        // 3. Clamping: Ensure the player doesn't drag beyond maxDragDistance
         Vector3 directionFromStart = transform.position - startingPos;
         if (directionFromStart.magnitude > maxDragDistance)
         {
-            transform.position = startingPos + directionFromStart.normalized * maxDragDistance; //
+            transform.position = startingPos + directionFromStart.normalized * maxDragDistance;
         }
-        lastDragPosition = currentMousePosition; //
+        lastDragPosition = currentMousePosition;
 
-        // 4. Safe Zone Logic: Determine if we should show the trajectory and change color
         float distance = Vector3.Distance(transform.position, startingPos);
+        Vector3 targetScale;
 
         if (distance < releaseThreshold)
         {
-            // Player is too close to start; treat as "Canceling"
             _spriteRenderer.color = safeZoneColor;
-
-            if (trajectoryLineRenderer != null)
-            {
-                trajectoryLineRenderer.enabled = false;
-            }
-        }
-        else
-        {
-            // Player is far enough; treat as "Aiming"
-            _spriteRenderer.color = Color.red; // Visual cue for "Ready to fire"
+            targetScale = Vector3.one * normalScale;
 
             if (trajectoryLineRenderer != null)
             {
                 trajectoryLineRenderer.enabled = true;
-                // Only calculate trajectory when it's actually visible
+                trajectoryLineRenderer.material = safeTrajectoryMaterial;
+                // ADD THIS: Use the helper method for the safe style
+                ApplyTrajectoryStyle(trajectorySafeColor, trajectoryWidth * 0.5f);
                 DrawTrajectory();
             }
         }
+        else
+        {
+            _spriteRenderer.color = readyZoneColor;
+            targetScale = Vector3.one * readyScale;
+
+            if (trajectoryLineRenderer != null)
+            {
+                trajectoryLineRenderer.enabled = true;
+                trajectoryLineRenderer.material = readyTrajectoryMaterial;
+                // ADD THIS: Use the helper method for the ready style
+                ApplyTrajectoryStyle(trajectoryReadyColor, trajectoryWidth);
+                DrawTrajectory();
+            }
+        }
+
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * scaleSpeed);
     }
 
     private void DrawTrajectory()
@@ -216,6 +256,17 @@ public class Player : MonoBehaviour
         }
 
         trajectoryLineRenderer.SetPositions(points);
+    }
+
+    private void ApplyTrajectoryStyle(Color color, float width)
+    {
+        // Sets both the start and end color of the line
+        trajectoryLineRenderer.startColor = color;
+        trajectoryLineRenderer.endColor = color;
+
+        // Sets the thickness
+        trajectoryLineRenderer.startWidth = width;
+        trajectoryLineRenderer.endWidth = width * 0.5f; // Makes it taper off at the end
     }
 
     private void HandleBoundaries()
@@ -280,7 +331,13 @@ public class Player : MonoBehaviour
 
         // 3. Hide the player object and stop its movement
         _spriteRenderer.enabled = false;
-        _collider.enabled = false;
+        // REMOVE THIS LINE: _collider.enabled = false; (It's causing the crash)
+
+        // This loop already handles the main collider and the click area child!
+        foreach (var col in _allColliders)
+        {
+            if (col != null) col.enabled = false;
+        }
         var rb = GetComponent<Rigidbody2D>();
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
@@ -319,12 +376,18 @@ public class Player : MonoBehaviour
 
         // RE-ENABLE the components that were hidden
         _spriteRenderer.enabled = true;
-        _spriteRenderer.color = Color.white;
+        transform.localScale = Vector3.one * normalScale; // Reset scale to normal
+        _spriteRenderer.color = Color.white; //
         _collider.enabled = true;
+        foreach (var col in _allColliders) col.enabled = true;
 
+
+        // Ensure BOTH line renderers are off
         GetComponent<LineRenderer>().enabled = false;
-
-        Debug.Log("Player has been reset with original orientation.");
+        if (trajectoryLineRenderer != null)
+        {
+            trajectoryLineRenderer.enabled = false;
+        }
     }
 }
 
