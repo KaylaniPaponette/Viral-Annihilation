@@ -29,6 +29,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenuPanel;
     private bool isPaused = false;
 
+    [Header("Leaderboard Panel")]
+    [SerializeField] private GameObject leaderboardPanel;
+
     [Header("Settings Menu")]
     [SerializeField] private SettingsMenu settingsMenu;
 
@@ -195,6 +198,27 @@ public class UIManager : MonoBehaviour
     public void CloseSettingsMenu()
     {
         settingsMenu.gameObject.SetActive(false);
+        pauseMenuPanel.SetActive(true);
+    }
+
+    public void OpenLeaderboardFromPause()
+    {
+        // Hide the pause menu and show the leaderboard
+        pauseMenuPanel.SetActive(false);
+        leaderboardPanel.SetActive(true);
+
+        // Refresh the scores using your existing script
+        LeaderboardDisplay ld = leaderboardPanel.GetComponentInChildren<LeaderboardDisplay>();
+        if (ld != null)
+        {
+            ld.FetchAndDisplayScores();
+        }
+    }
+
+    public void CloseLeaderboardToPause()
+    {
+        // Hide leaderboard and bring back the pause menu
+        leaderboardPanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
     }
 }
