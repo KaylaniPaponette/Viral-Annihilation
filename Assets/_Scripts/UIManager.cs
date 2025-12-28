@@ -32,6 +32,13 @@ public class UIManager : MonoBehaviour
     [Header("Leaderboard Panel")]
     [SerializeField] private GameObject leaderboardPanel;
 
+    [Header("HUD Sensitivity Reference")]
+    [Tooltip("Assign the sensitivity slider that is showing through the menus here.")]
+    [SerializeField] private GameObject hudSensitivitySlider; // Reference to the object appearing in the background
+
+    [Header("Quit Confirmation")]
+    [SerializeField] private GameObject quitConfirmationPanel;
+
     [Header("Settings Menu")]
     [SerializeField] private SettingsMenu settingsMenu;
 
@@ -173,11 +180,31 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance != null) GameManager.Instance.ProceedToNextLevel();
     }
 
+    /// <summary>
+    /// Helper method to toggle gameplay HUD elements (like the sensitivity slider)
+    /// </summary>
+    private void SetGameplayHUDVisible(bool visible)
+    {
+        if (hudSensitivitySlider != null)
+        {
+            hudSensitivitySlider.SetActive(visible);
+        }
+    }
     public void TogglePauseMenu()
     {
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
         pauseMenuPanel.SetActive(isPaused);
+
+        // Efficiency: Hide/Show the HUD slider based on pause state
+        SetGameplayHUDVisible(!isPaused);
+
+        if (!isPaused)
+        {
+            quitConfirmationPanel.SetActive(false);
+            settingsMenu.gameObject.SetActive(false);
+            leaderboardPanel.SetActive(false);
+        }
     }
 
     public void OnResumeButtonPressed() => TogglePauseMenu();
@@ -193,12 +220,16 @@ public class UIManager : MonoBehaviour
         pauseMenuPanel.SetActive(false);
         settingsMenu.gameObject.SetActive(true);
         settingsMenu.RefreshUI();
+
+        // Ensure HUD is hidden while in settings
+        SetGameplayHUDVisible(false);
     }
 
     public void CloseSettingsMenu()
     {
         settingsMenu.gameObject.SetActive(false);
         pauseMenuPanel.SetActive(true);
+        // HUD remains hidden because pause menu is still active
     }
 
     public void OpenLeaderboardFromPause()
@@ -220,6 +251,35 @@ public class UIManager : MonoBehaviour
         // Hide leaderboard and bring back the pause menu
         leaderboardPanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
+    }
+
+    public void OpenQuitConfirmation()
+    {
+        pauseMenuPanel.SetActive(false);
+        quitConfirmationPanel.SetActive(true);
+
+        // Hide HUD explicitly when confirmation opens
+        SetGameplayHUDVisible(false);
+    }
+
+    public void CloseQuitConfirmation()
+    {
+        quitConfirmationPanel.SetActive(false);
+        pauseMenuPanel.SetActive(true);
+        // HUD remains hidden because we returned to the Pause Menu
+    }
+
+    public void ConfirmQuitToGameOver()
+    {
+        Time.timeScale = 1f;
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.GoToGameOver(); // GameManager handles the scene change
+        }
+        else
+        {
+            SceneManager.LoadScene("_Scenes/GameOver");
+        }
     }
 }
 

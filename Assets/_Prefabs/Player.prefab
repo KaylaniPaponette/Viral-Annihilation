@@ -148,7 +148,7 @@ MonoBehaviour:
   safeZoneColor: {r: 1, g: 0, b: 0, a: 1}
   trajectorySafeColor: {r: 1, g: 0, b: 0, a: 1}
   trajectoryReadyColor: {r: 0.0047137737, g: 1, b: 0, a: 1}
-  trajectoryWidth: 0.18
+  trajectoryWidth: 0.16
   safeTrajectoryMaterial: {fileID: 2100000, guid: 7cd5364df3e3dbd499c307cd51e8e39b, type: 2}
   readyTrajectoryMaterial: {fileID: 2100000, guid: a7c9ddbe3dd4ba44699ea1d13fdfd01e, type: 2}
   timeToExplode: 5

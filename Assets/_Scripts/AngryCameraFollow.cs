@@ -1,5 +1,6 @@
 // ===== AngryCameraFollow.cs (Final Version) =====
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class AngryCameraFollow : MonoBehaviour
 {
@@ -223,7 +224,8 @@ public class AngryCameraFollow : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
         lastPlayerPosition = player.position;
 
-        if (Input.GetMouseButtonDown(0) && !Player.IsBeingDragged)
+        // ADDED: EventSystem check to prevent panning when clicking UI
+        if (Input.GetMouseButtonDown(0) && !Player.IsBeingDragged && !EventSystem.current.IsPointerOverGameObject())
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider == null)
@@ -251,7 +253,8 @@ public class AngryCameraFollow : MonoBehaviour
 
     void HandleManualPanIdle()
     {
-        if (Input.GetMouseButtonDown(0) && !Player.IsBeingDragged)
+        // ADDED: EventSystem check here as well
+        if (Input.GetMouseButtonDown(0) && !Player.IsBeingDragged && !EventSystem.current.IsPointerOverGameObject())
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit.collider == null)
