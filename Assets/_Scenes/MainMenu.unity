@@ -886,7 +886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shotCount: 0
   maxShots: 3
-  adOfferChance: 0.847
+  adOfferChance: 0.67
   defaultBgmIndex: 13
   mainAudioMixer: {fileID: 24100000, guid: ffa4a637067c86247b09b708b1c22ba5, type: 2}
   levelCompleteBaseScore: 1000
@@ -2465,6 +2465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0abdf0d6c18954a41b56f7240ed3b6cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaderboardID: 31702
 --- !u!1 &2096807445
 GameObject:
   m_ObjectHideFlags: 0
